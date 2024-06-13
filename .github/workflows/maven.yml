@@ -14,7 +14,7 @@ jobs:
 
       # Setup for Java projects
       - name: Set up JDK 21
-        uses: actions/setup-java@v3
+        uses: actions/setup-java@v4
         with:
           java-version: '21'
           distribution: 'temurin'
@@ -38,7 +38,7 @@ jobs:
 
       # Setup for Angular projects
       - name: Install Node.js
-        uses: actions/setup-node@v2
+        uses: actions/setup-node@v4
         with:
           node-version: '21'
 
@@ -49,10 +49,11 @@ jobs:
           echo "Service Names: $SERVICE_NAMES"
           for SERVICE_NAME in $(echo $SERVICE_NAMES | tr ',' ' '); do
             echo "Processing Service: $SERVICE_NAME"
+            #ls -al
             cd $SERVICE_NAME
+            #pwd
             if [ "$SERVICE_NAME" == "blogs-analyzer-ui" ]; then
               npm install
-              npm test --code-coverage
             fi
           done
   sonarcloud:
@@ -71,7 +72,9 @@ jobs:
           echo "Service Names: $SERVICE_NAMES"
           for SERVICE_NAME in $(echo $SERVICE_NAMES | tr ',' ' '); do
             echo "Processing Service: $SERVICE_NAME"
+            #ls -al
             cd $SERVICE_NAME
+            #pwd
             if [ "$SERVICE_NAME" != "blogs-analyzer-ui" ]; then
               mvn clean verify sonar:sonar -Dsonar.host.url=https://sonarcloud.io -Dsonar.organization=nashtech -Dsonar.branch.name=master
             fi

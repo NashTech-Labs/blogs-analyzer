@@ -1,2 +1,2 @@
-blogs-analyzer
+blogs-analyzer,
 blogs-analyzer-ui
