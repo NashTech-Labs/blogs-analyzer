@@ -22,7 +22,7 @@ jobs:
           distribution: 'temurin'
           cache: maven
       - name: Build with Maven
-        run: mvn -B package --file Blogs_Analyzer/pom.xml
+        run: mvn -B package --file blogs-analyzer/pom.xml
       - name: SonarCloud Scan
-        run: mvn -B clean verify -Psonar --file Blogs_Analyzer/pom.xml
+        run: mvn -B clean verify -Psonar --file blogs-analyzer/pom.xml
 
