@@ -1,0 +1,2 @@
+blogs-analyzer-be
+blogs-analyzer-ui
