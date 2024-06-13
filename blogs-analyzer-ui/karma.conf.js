@@ -10,23 +10,37 @@ module.exports = function (config) {
             require('@angular-devkit/build-angular/plugins/karma')
         ],
         client: {
-            jasmine: {},
             clearContext: false
         },
-        jasmineHtmlReporter: {
-            suppressAll: true
-        },
-        coverageReporter: {
-            dir: require('path').join(__dirname, 'coverage'),
+        coverageReporter : {
+            dir: require('path').join(__dirname, './coverage'),
             subdir: '.',
             reporters: [
-                { type: 'html' },
-                { type: 'lcovonly', file: 'lcov.info' },
-                { type: 'text-summary' }
-            ]
+                {type: 'html'},
+                {type: 'lcovonly'},
+                {type: 'text-summary'},
+                {type: 'cobertura'}
+            ],
+            fixWebpackSourcePaths: true
         },
-        reporters: ['progress', 'coverage'],
-        browsers: ['Chrome'],
-        restartOnFileChange: true
+        reporters: ['progress', 'kjhtml','coverage'],
+        port: 9876,
+        colors: true,
+        logLevel: config.LOG_INFO,
+        browsers: ['ChromeHeadless'],
+        customLaunchers: {
+            ChromeHeadless: {
+                base: 'Chrome',
+                flags: [
+                    '--disable-gpu',
+                    '--no-sandbox',
+                    '--disable-setuid-sandbox',
+                    '--headless',
+                    '--remote-debugging-port=9222']
+            }
+        },
+        browserNoActivityTimeout: 60000,
+        autoWatch: false,
+        singleRun: true,
     });
 };

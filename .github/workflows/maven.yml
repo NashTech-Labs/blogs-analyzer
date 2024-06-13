@@ -34,7 +34,6 @@ jobs:
             #pwd
             if [ "$SERVICE_NAME" != "blogs-analyzer-ui" ]; then
                 mvn clean install -B -V
-                mvn clean verify -Psonar
             fi
           done
 
@@ -95,6 +94,8 @@ jobs:
             cd $SERVICE_NAME
             #pwd
             if [ "$SERVICE_NAME" == "blogs-analyzer-ui" ]; then
+              npm install
+              npm test -- --coverage
               npm run sonar
             fi
           done
