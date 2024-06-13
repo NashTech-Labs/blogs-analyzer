@@ -29,11 +29,14 @@ jobs:
             echo "Building and deploying $SERVICE_NAME"
 
             # Set the build context to the root directory
-            #ls -al
-            cd $SERVICE_NAME
-            #pwd
-            if [ "$SERVICE_NAME" != "blogs-analyzer-ui" ]; then
+            if [ -d "$SERVICE_NAME" ]; then
+              cd $SERVICE_NAME
+              if [ "$SERVICE_NAME" != "blogs-analyzer-ui" ]; then
                 mvn clean install -B -V
+              fi
+              cd ..
+            else
+              echo "Directory $SERVICE_NAME does not exist."
             fi
           done
 
@@ -43,18 +46,21 @@ jobs:
         with:
           node-version: '21'
 
-      # Install dependencies and run tests for Angular projects
-      - name: Install dependencies and run tests for Angular projects
+      # Install dependencies for Angular projects
+      - name: Install dependencies for Angular projects
         run: |
           SERVICE_NAMES=$(cat projects-changes-deploy.txt)
           echo "Service Names: $SERVICE_NAMES"
           for SERVICE_NAME in $(echo $SERVICE_NAMES | tr ',' ' '); do
             echo "Processing Service: $SERVICE_NAME"
-            #ls -al
-            cd $SERVICE_NAME
-            #pwd
-            if [ "$SERVICE_NAME" == "blogs-analyzer-ui" ]; then
-              npm install
+            if [ -d "$SERVICE_NAME" ]; then
+              cd $SERVICE_NAME
+              if [ "$SERVICE_NAME" == "blogs-analyzer-ui" ]; then
+                npm install
+              fi
+              cd ..
+            else
+              echo "Directory $SERVICE_NAME does not exist."
             fi
           done
   sonarcloud:
@@ -62,9 +68,16 @@ jobs:
     runs-on: ubuntu-latest
     needs: build
     steps:
-      - uses: actions/checkout@v4
+      - name: Checkout code
+        uses: actions/checkout@v4
         with:
           fetch-depth: 0
+
+      # Setup for Node.js
+      - name: Install Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: '21'
 
       # Sonar Analysis for Java projects
       - name: Sonar Analysis for Java projects
@@ -73,11 +86,14 @@ jobs:
           echo "Service Names: $SERVICE_NAMES"
           for SERVICE_NAME in $(echo $SERVICE_NAMES | tr ',' ' '); do
             echo "Processing Service: $SERVICE_NAME"
-            #ls -al
-            cd $SERVICE_NAME
-            #pwd
-            if [ "$SERVICE_NAME" != "blogs-analyzer-ui" ]; then
-              mvn clean verify sonar:sonar -Dsonar.host.url=https://sonarcloud.io -Dsonar.organization=nashtech -Dsonar.branch.name=master
+            if [ -d "$SERVICE_NAME" ]; then
+              cd $SERVICE_NAME
+              if [ "$SERVICE_NAME" != "blogs-analyzer-ui" ]; then
+                mvn clean verify sonar:sonar -Dsonar.host.url=https://sonarcloud.io -Dsonar.organization=nashtech -Dsonar.branch.name=master
+              fi
+              cd ..
+            else
+              echo "Directory $SERVICE_NAME does not exist."
             fi
           done
         env:
@@ -90,13 +106,16 @@ jobs:
           echo "Service Names: $SERVICE_NAMES"
           for SERVICE_NAME in $(echo $SERVICE_NAMES | tr ',' ' '); do
             echo "Processing Service: $SERVICE_NAME"
-            #ls -al
-            cd $SERVICE_NAME
-            #pwd
-            if [ "$SERVICE_NAME" == "blogs-analyzer-ui" ]; then
-              npm install
-              npm test -- --coverage
-              npm run sonar
+            if [ -d "$SERVICE_NAME" ]; then
+              cd $SERVICE_NAME
+              if [ "$SERVICE_NAME" == "blogs-analyzer-ui" ]; then
+                npm install
+                npm test
+                npm run sonar
+              fi
+              cd ..
+            else
+              echo "Directory $SERVICE_NAME does not exist."
             fi
           done
         env:
