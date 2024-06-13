@@ -1,4 +1,4 @@
-name: Java CI with Maven
+name: CI/CD Pipeline
 
 on:
   push:
@@ -11,66 +11,88 @@ jobs:
     steps:
       - name: Checkout code
         uses: actions/checkout@v4
+
+      # Setup for Java projects
       - name: Set up JDK 21
         uses: actions/setup-java@v3
         with:
           java-version: '21'
           distribution: 'temurin'
           cache: maven
-      - name: Read service names from file
-        id: read-service-names
+
+      # Build and deploy Java services
+      - name: Build and deploy Java services
         run: |
           SERVICE_NAMES=$(cat projects-changes-deploy.txt)
           echo "Service Names: $SERVICE_NAMES"
-          echo "::set-output name=service_names::$SERVICE_NAMES"
-      - name: Build and deploy services
-        run: |
-          for SERVICE_NAME in $(echo ${{ steps.read-service-names.outputs.service_names }} | tr ',' ' '); do
+          for SERVICE_NAME in $(echo $SERVICE_NAMES | tr ',' ' '); do
             echo "Building and deploying $SERVICE_NAME"
 
             # Set the build context to the root directory
             cd $SERVICE_NAME
-            if [  $SERVICE_NAME != "blogs-analyzer-ui" ]; then
+            if [ "$SERVICE_NAME" != "blogs-analyzer-ui" ]; then
                 mvn clean install -B -V
             fi
+            cd ..
+          done
+
+      # Setup for Angular projects
+      - name: Install Node.js
+        uses: actions/setup-node@v2
+        with:
+          node-version: '14'
+
+      # Install dependencies and run tests for Angular projects
+      - name: Install dependencies and run tests for Angular projects
+        run: |
+          SERVICE_NAMES=$(cat projects-changes-deploy.txt)
+          echo "Service Names: $SERVICE_NAMES"
+          for SERVICE_NAME in $(echo $SERVICE_NAMES | tr ',' ' '); do
+            echo "Processing Service: $SERVICE_NAME"
+            cd $SERVICE_NAME
+            if [ "$SERVICE_NAME" == "blogs-analyzer-ui" ]; then
+              npm install
+              npm test -- --coverage
+            fi
+            cd ..
           done
   sonarcloud:
-    name: SonarCloud
+    name: SonarCloud Analysis
     runs-on: ubuntu-latest
+    needs: build
     steps:
       - uses: actions/checkout@v4
         with:
           fetch-depth: 0
-      - name: Read service names from file
-        id: read-service-names
+
+      # Sonar Analysis for Java projects
+      - name: Sonar Analysis for Java projects
         run: |
           SERVICE_NAMES=$(cat projects-changes-deploy.txt)
           echo "Service Names: $SERVICE_NAMES"
-          echo "::set-output name=service_names::$SERVICE_NAMES"
-      - name: SonarCloud Scan
-        uses: SonarSource/sonarcloud-github-action@master
-      - name: Run Sonar Analysis
-        run: |
-           for SERVICE_NAME in $(echo ${{ steps.read-service-names.outputs.service_names }} | tr ',' ' '); do
+          for SERVICE_NAME in $(echo $SERVICE_NAMES | tr ',' ' '); do
             echo "Processing Service: $SERVICE_NAME"
-            #ls -al
             cd $SERVICE_NAME
-            #pwd
-            if [ "$SERVICE_NAME" == "blogs-analyzer-ui" ]; then
-              npm install
-          
-              # Run tests and generate code coverage reports (replace with your test command)
-              npm test -- --coverage
-          
-              # Install SonarScanner for Node.js
-              npm install -g sonarqube-scanner
-          
-              # Run SonarScanner for Node.js
-              sonar-scanner -Dsonar.host.url=https://sonarcloud.io -Dsonar.organization=nashtech -Dsonar.branch.name=master
-            else
-              # Maven Sonar
+            if [ "$SERVICE_NAME" != "blogs-analyzer-ui" ]; then
               mvn clean verify sonar:sonar -Dsonar.host.url=https://sonarcloud.io -Dsonar.organization=nashtech -Dsonar.branch.name=master
             fi
-           done
+            cd ..
+          done
+        env:
+          SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
+
+      # Sonar Analysis for Angular projects
+      - name: Sonar Analysis for Angular projects
+        run: |
+          SERVICE_NAMES=$(cat projects-changes-deploy.txt)
+          echo "Service Names: $SERVICE_NAMES"
+          for SERVICE_NAME in $(echo $SERVICE_NAMES | tr ',' ' '); do
+            echo "Processing Service: $SERVICE_NAME"
+            cd $SERVICE_NAME
+            if [ "$SERVICE_NAME" == "blogs-analyzer-ui" ]; then
+              npm run sonar
+            fi
+            cd ..
+          done
         env:
           SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
