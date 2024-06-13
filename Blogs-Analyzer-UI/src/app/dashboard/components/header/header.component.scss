@@ -1,0 +1,20 @@
+.mainToolbar {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 0 20px;
+}
+
+.mainToolbar .d-flex {
+  display: flex;
+  align-items: center;
+}
+
+.mainToolbar .logo-title {
+  font-size: 36px;
+  margin-left: 10px; /* Adjust this value to control spacing between the image and the text */
+}
+
+.toolbar-spacer {
+  flex: 1;
+}
