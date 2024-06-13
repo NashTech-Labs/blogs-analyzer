@@ -33,7 +33,6 @@ jobs:
             if [ "$SERVICE_NAME" != "blogs-analyzer-ui" ]; then
                 mvn clean install -B -V
             fi
-            cd ..
           done
 
       # Setup for Angular projects
@@ -54,7 +53,6 @@ jobs:
               npm install
               npm test --code-coverage
             fi
-            cd ..
           done
   sonarcloud:
     name: SonarCloud Analysis
@@ -76,7 +74,6 @@ jobs:
             if [ "$SERVICE_NAME" != "blogs-analyzer-ui" ]; then
               mvn clean verify sonar:sonar -Dsonar.host.url=https://sonarcloud.io -Dsonar.organization=nashtech -Dsonar.branch.name=master
             fi
-            cd ..
           done
         env:
           SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
@@ -92,7 +89,6 @@ jobs:
             if [ "$SERVICE_NAME" == "blogs-analyzer-ui" ]; then
               npm run sonar
             fi
-            cd ..
           done
         env:
           SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
