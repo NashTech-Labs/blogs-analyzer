@@ -47,8 +47,6 @@ jobs:
           SERVICE_NAMES=$(cat projects-changes-deploy.txt)
           echo "Service Names: $SERVICE_NAMES"
           echo "::set-output name=service_names::$SERVICE_NAMES"
-      - name: SonarCloud Scan
-        uses: SonarSource/sonarcloud-github-action@master
       - name: Run Sonar Analysis
         run: |
            for SERVICE_NAME in $(echo ${{ steps.read-service-names.outputs.service_names }} | tr ',' ' '); do
@@ -63,10 +61,7 @@ jobs:
               npm test -- --coverage
           
               # Install SonarScanner for Node.js
-              npm install -g sonarqube-scanner
-          
-              # Run SonarScanner for Node.js
-              sonar-scanner -Dsonar.host.url=https://sonarcloud.io -Dsonar.organization=nashtech -Dsonar.branch.name=master
+              mvn clean verify sonar:sonar
             else
               # Maven Sonar
               mvn clean verify sonar:sonar -Dsonar.host.url=https://sonarcloud.io -Dsonar.organization=nashtech -Dsonar.branch.name=master
