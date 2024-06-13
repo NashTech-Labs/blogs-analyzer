@@ -49,6 +49,7 @@ jobs:
           echo "::set-output name=service_names::$SERVICE_NAMES"
       - name: SonarCloud Scan
         uses: SonarSource/sonarcloud-github-action@master
+      - name: Run Sonar Analysis
         run: |
            for SERVICE_NAME in $(echo ${{ steps.read-service-names.outputs.service_names }} | tr ',' ' '); do
             echo "Processing Service: $SERVICE_NAME"
