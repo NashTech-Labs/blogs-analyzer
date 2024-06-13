@@ -7,9 +7,7 @@ on:
 
 jobs:
   build:
-
     runs-on: ubuntu-latest
-
     steps:
       - name: Checkout code
         uses: actions/checkout@v4
@@ -41,12 +39,8 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
-      - name: Set up JDK 21
-        uses: actions/setup-java@v3
         with:
-          java-version: '21'
-          distribution: 'temurin'
-          cache: maven
+          fetch-depth: 0
       - name: Read service names from file
         id: read-service-names
         run: |
@@ -54,6 +48,7 @@ jobs:
           echo "Service Names: $SERVICE_NAMES"
           echo "::set-output name=service_names::$SERVICE_NAMES"
       - name: SonarCloud Scan
+        uses: SonarSource/sonarcloud-github-action@master
         run: |
            for SERVICE_NAME in $(echo ${{ steps.read-service-names.outputs.service_names }} | tr ',' ' '); do
             echo "Processing Service: $SERVICE_NAME"
@@ -76,3 +71,5 @@ jobs:
               mvn clean verify sonar:sonar -Dsonar.host.url=https://sonarcloud.io -Dsonar.organization=nashtech -Dsonar.branch.name=master
             fi
            done
+        env:
+          SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
