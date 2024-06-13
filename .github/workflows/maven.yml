@@ -52,7 +52,7 @@ jobs:
             cd $SERVICE_NAME
             if [ "$SERVICE_NAME" == "blogs-analyzer-ui" ]; then
               npm install
-              npm test -- --coverage
+              npm test --code-coverage
             fi
             cd ..
           done
