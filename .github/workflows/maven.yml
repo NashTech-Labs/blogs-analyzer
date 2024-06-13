@@ -29,7 +29,9 @@ jobs:
             echo "Building and deploying $SERVICE_NAME"
 
             # Set the build context to the root directory
+            #ls -al
             cd $SERVICE_NAME
+            #pwd
             if [ "$SERVICE_NAME" != "blogs-analyzer-ui" ]; then
                 mvn clean install -B -V
                 mvn clean verify -Psonar
@@ -89,7 +91,9 @@ jobs:
           echo "Service Names: $SERVICE_NAMES"
           for SERVICE_NAME in $(echo $SERVICE_NAMES | tr ',' ' '); do
             echo "Processing Service: $SERVICE_NAME"
+            #ls -al
             cd $SERVICE_NAME
+            #pwd
             if [ "$SERVICE_NAME" == "blogs-analyzer-ui" ]; then
               npm run sonar
             fi
