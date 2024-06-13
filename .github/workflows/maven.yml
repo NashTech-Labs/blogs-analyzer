@@ -19,15 +19,13 @@ jobs:
           java-version: '21'
           distribution: 'temurin'
           cache: maven
-      - name: Read service names from file
-        id: read-service-names
+
+      # Build and deploy Java services
+      - name: Build and deploy Java services
         run: |
           SERVICE_NAMES=$(cat projects-changes-deploy.txt)
           echo "Service Names: $SERVICE_NAMES"
-          echo "::set-output name=service_names::$SERVICE_NAMES"
-      - name: Build and deploy Java services
-        run: |
-          for SERVICE_NAME in $(echo ${{ steps.read-service-names.outputs.service_names }} | tr ',' ' '); do
+          for SERVICE_NAME in $(echo $SERVICE_NAMES | tr ',' ' '); do
             echo "Building and deploying $SERVICE_NAME"
 
             # Set the build context to the root directory
@@ -42,22 +40,19 @@ jobs:
         uses: actions/setup-node@v2
         with:
           node-version: '21'
-      - name: Read service names from file
-        id: read-service-names
-        run: |
-          SERVICE_NAMES=$(cat projects-changes-deploy.txt)
-          echo "Service Names: $SERVICE_NAMES"
-          echo "::set-output name=service_names::$SERVICE_NAMES"
+
       # Install dependencies and run tests for Angular projects
       - name: Install dependencies and run tests for Angular projects
         run: |
-          for SERVICE_NAME in $(echo ${{ steps.read-service-names.outputs.service_names }} | tr ',' ' '); do
-           echo "Processing Service: $SERVICE_NAME"
-           cd $SERVICE_NAME
-           if [ "$SERVICE_NAME" == "blogs-analyzer-ui" ]; then
-             npm install
-             npm test --code-coverage
-           fi
+          SERVICE_NAMES=$(cat projects-changes-deploy.txt)
+          echo "Service Names: $SERVICE_NAMES"
+          for SERVICE_NAME in $(echo $SERVICE_NAMES | tr ',' ' '); do
+            echo "Processing Service: $SERVICE_NAME"
+            cd $SERVICE_NAME
+            if [ "$SERVICE_NAME" == "blogs-analyzer-ui" ]; then
+              npm install
+              npm test --code-coverage
+            fi
           done
   sonarcloud:
     name: SonarCloud Analysis
