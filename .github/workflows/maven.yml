@@ -59,6 +59,7 @@ jobs:
               cd ..
             fi
           done
+
   sonarcloud:
     name: SonarCloud Analysis
     runs-on: ubuntu-latest
@@ -68,6 +69,14 @@ jobs:
         uses: actions/checkout@v4
         with:
           fetch-depth: 0
+
+      # Setup for Java projects
+      - name: Set up JDK 21
+        uses: actions/setup-java@v4
+        with:
+          java-version: '21'
+          distribution: 'temurin'
+          cache: maven
 
       # Setup for Node.js
       - name: Install Node.js
