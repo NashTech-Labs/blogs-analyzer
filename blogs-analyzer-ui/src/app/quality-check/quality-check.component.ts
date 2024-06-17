@@ -1,5 +1,6 @@
 import { Component } from '@angular/core';
 import { Location } from "@angular/common";
+import { BlogService } from "../services/blog.service";
 
 @Component({
   selector: 'app-quality-check',
@@ -8,8 +9,9 @@ import { Location } from "@angular/common";
 })
 export class QualityCheckComponent {
   postData: any;
+  qualityResult!: string;
 
-  constructor(private location: Location) {
+  constructor(private location: Location, private blogService: BlogService) {
   }
 
   ngOnInit(): void {
@@ -18,5 +20,19 @@ export class QualityCheckComponent {
 
   goBack(): void {
     this.location.back();
+  }
+
+  checkQuality() {
+    const prompt = 'Review blog with the following content';
+
+    this.blogService.getBlogQuality(prompt).subscribe(
+      response => {
+        this.qualityResult = response;
+      },
+      error => {
+        console.error('Error:', error);
+        this.qualityResult = 'An error occurred';
+      }
+    );
   }
 }

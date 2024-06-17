@@ -5,7 +5,6 @@
     Back
 </button>
 
-
 <div class="container">
     <div class="blog-content">
         <h2>HTML Preview</h2>
@@ -13,5 +12,9 @@
             <div [innerHTML]="postData"></div>
         </mat-card>
     </div>
-    <button class="search-btn">Check Blog's Quality</button>
+    <button class="search-btn" (click)="checkQuality()">Check Blog's Quality</button>
+    <div *ngIf="qualityResult" class="result-box">
+        <h2>Quality Result</h2>
+        <textarea readonly>{{ qualityResult }}</textarea>
+    </div>
 </div>
