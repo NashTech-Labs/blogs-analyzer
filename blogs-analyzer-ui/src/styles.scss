@@ -1,1 +1,53 @@
 /* You can add global styles to this file, and also import other style files */
+@import 'ag-grid-community/styles/ag-grid.css';
+@import 'ag-grid-community/styles/ag-theme-alpine.css';
+
+html, body { height: 100%; }
+body {
+  margin: 0;
+  font-family: Arial;
+}
+
+.ag-theme-alpine {
+  --ag-control-panel-background-color: rgb(247, 243, 244);
+  --ag-selected-tab-underline-width: 2px;
+  --ag-selected-tab-underline-transition-speed: 0.5s;
+  --ag-header-background-color: #0f0092;
+  --ag-header-foreground-color: #f3f3f3;
+  --ag-border-color: transparent;
+}
+
+.ag-root-wrapper {
+  border: none;
+}
+
+.ag-header-row {
+  font-family: Arial;
+  font-size: 15px;
+  font-weight: 600;
+  line-height: 24px;
+}
+
+.ag-header-row:not(:first-child) .ag-header-cell:not(.ag-header-span-height.ag-header-span-total), .ag-header-row:not(:first-child) .ag-header-group-cell.ag-header-group-cell-with-group {
+  border-top: 1px dot-dot-dash #d1d1d1;
+}
+
+.ag-header{
+  border-bottom: 1px dotted #d1d1d1;
+}
+
+.ag-row {
+  height: 40px;
+  background-color: #fff;
+  font-family: Arial;
+  font-size: 14px;
+  font-weight: 400;
+  line-height: 17px;
+  border-bottom: 1px dotted #d1d1d1;
+  color: #666666;
+}
+
+.ag-theme-alpine .ag-row, .ag-theme-alpine-dark .ag-row {
+  font-size: 15px;
+}
+

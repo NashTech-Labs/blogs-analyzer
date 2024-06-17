@@ -1,0 +1,63 @@
+.container {
+  justify-content: center;
+  align-items: center;
+}
+
+.blog-content {
+  flex-direction: column;
+}
+
+.blog-card {
+  width: 100%;
+  max-height: 500px;
+  padding: 16px;
+  margin: 16px 0;
+  box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+  border-radius: 8px;
+  background-color: #fff;
+  overflow-y: auto;
+}
+
+.mat-mdc-card {
+  border-radius: 8px;
+  max-height: 500px;
+  min-height: 400px;
+  box-shadow: 0px 0px 10px 0px #9b9b9b,
+  0 1px 1px 0 #9b9b9b,
+  0 1px 1px 0 #9b9b9b;
+}
+
+.search-btn {
+  fill: transparent;
+  border: transparent;
+  position: relative;
+  border-radius: 30px;
+  background-color: #0f0092;
+  color: #FFF;
+  padding: 12px 25px;
+  display: inline-block;
+  font-size: 24px;
+  font-weight: bold;
+  letter-spacing: 5px;
+  margin: 20px;
+  cursor: pointer;
+  box-shadow: -5px 6px 20px 0px rgba(26, 26, 26, 0.4);
+}
+
+.back-btn {
+  font-size: 24px; /* Adjust the font size as needed */
+  margin: 10px;
+  color: #0f0092 !important;
+  background-color: transparent;
+  border: none;
+  cursor: pointer;
+}
+
+.back-btn mat-icon {
+  font-size: 20px;
+  margin: 5px;
+}
+
+.back-btn:hover {
+  text-decoration: underline;
+}

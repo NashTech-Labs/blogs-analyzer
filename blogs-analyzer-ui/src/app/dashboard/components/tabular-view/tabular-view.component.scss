@@ -1,0 +1,63 @@
+
+.spinner {
+  height: 500px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.pagination {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  margin-top: 10px;
+
+  button {
+    background: none;
+    border: none;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    margin: 0 10px;
+    padding: 5px;
+    font-size: 16px;
+    color: #0f0092;
+
+
+    &:disabled {
+      cursor: not-allowed;
+      color: #cccccc;
+    }
+
+    mat-icon {
+      font-size: 24px;
+    }
+  }
+
+  span {
+    margin: 0 10px;
+    font-size: 16px;
+  }
+}
+
+::ng-deep .check-btn {
+  background-color: #0f0092;
+  border: none;
+  color: white;
+  display: inline-block;
+  font-size: 14px;
+  cursor: pointer;
+  border-radius: 4px;
+  height: 20px; /* Set the button height */
+  line-height: 20px; /* Ensure the text is vertically centered */
+  padding: 0 5px; /* Adjust padding to fit the text */
+
+  &:hover {
+    background-color: #0f0092;
+  }
+
+  &:disabled {
+    background-color: #cccccc;
+    cursor: not-allowed;
+  }
+}

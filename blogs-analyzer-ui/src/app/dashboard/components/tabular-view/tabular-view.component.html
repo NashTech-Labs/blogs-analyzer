@@ -1,0 +1,33 @@
+<ng-container *ngIf="loading; else dataLoaded">
+    <div class="spinner mt-5" data-testid="mabl-bulk-shrink-loader">
+        <div class="spinner-border text-primary" role="status">
+            <span class="sr-only"></span>
+        </div>
+    </div>
+</ng-container>
+<ng-template #dataLoaded>
+    <ag-grid-angular
+            style="width: 100%; height: 500px;"
+            class="ag-theme-alpine"
+            [rowData]="rowData"
+            [columnDefs]="columnDefs"
+            [suppressDragLeaveHidesColumns]="true"
+            [enableCellTextSelection]="true"
+            [ensureDomOrder]="true"
+    ></ag-grid-angular>
+    <div class="pagination">
+        <button (click)="navigateToFirstPage()" [disabled]="currentPage === 1">
+            <mat-icon>keyboard_double_arrow_left</mat-icon>
+        </button>
+        <button (click)="onPageChange(currentPage - 1)" [disabled]="currentPage === 1">
+            <mat-icon>navigate_before</mat-icon>
+        </button>
+        <span>Page {{ currentPage }} of {{ totalPages }}</span>
+        <button (click)="onPageChange(currentPage + 1)" [disabled]="currentPage === totalPages">
+            <mat-icon>navigate_next</mat-icon>
+        </button>
+        <button (click)="navigateToLastPage()" [disabled]="currentPage === totalPages">
+            <mat-icon>keyboard_double_arrow_right</mat-icon>
+        </button>
+    </div>
+</ng-template>

@@ -1,0 +1,29 @@
+<div class="main-content">
+    <div class="search-section">
+        <div class="d-flex justify-content-around align-items-center m-3">
+            <div class="subscribe">
+                <p>Search Blogs by Text</p>
+                <input placeholder="Blog Title" class="subscribe-input" type="text" [(ngModel)]="searchTitle">
+                <br>
+                <button class="search-btn" (click)="searchByTitle()">Search</button>
+            </div>
+            <div class="subscribe">
+                <p>Search Blogs by Author Id</p>
+                <input placeholder="Author Id" class="subscribe-input" type="number" [(ngModel)]="authorId">
+                <br>
+                <button class="search-btn" (click)="getBlogByAuthorId()">Search</button>
+            </div>
+            <div class="subscribe">
+                <p>Search Blogs by ID</p>
+                <input placeholder="Blog Id" class="subscribe-input" type="number" [(ngModel)]="blogId">
+                <br>
+                <button class="search-btn" (click)="getBlogById()">Search</button>
+            </div>
+        </div>
+        <h2 class="mx-4">Existing Blogs</h2>
+
+        <mat-card class="px-2 py-1 mx-4">
+            <app-tabular-view></app-tabular-view>
+        </mat-card>
+    </div>
+</div>
