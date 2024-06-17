@@ -23,8 +23,7 @@ export class QualityCheckComponent {
   }
 
   checkQuality() {
-    const prompt = 'Review blog with the following content';
-
+    const prompt = 'Review blog with the following content' + this.postData;
     this.blogService.getBlogQuality(prompt).subscribe(
       response => {
         this.qualityResult = response;

@@ -6,7 +6,7 @@ import { map, Observable } from 'rxjs';
   providedIn: 'root'
 })
 export class BlogService {
-  private baseUrl = 'http://localhost:8080/api';
+  private baseUrl = 'http://localhost:8888/api';
 
 
   constructor(private http: HttpClient) {
@@ -41,7 +41,6 @@ export class BlogService {
 
   getBlogQuality(prompt: string): Observable<any> {
     const url = `${this.baseUrl}/gemini/v1/review`;
-    const params = new HttpParams().set('prompt', prompt);
-    return this.http.get(url, { params, responseType: 'text' });
+    return this.http.post(url, prompt, { responseType: 'text' });
   }
 }
