@@ -11,7 +11,6 @@ Blogs-Analyzer Backend is a Spring Boot application built to search blogs from W
 - [Dependencies](#dependencies)
 - [Endpoints](#endpoints)
 - [Running the Application](#running-the-application)
-- [Further Help](#further-help)
 
 ## Setup Instructions
 
@@ -39,6 +38,7 @@ mvn clean install
 3) WordPress API Client: Dependency for communicating with WordPress APIs to fetch blog data based on username, blog ID, or text.
 
 ## Endpoints
+
 The backend exposes the following endpoints:
 
 Search Blogs:
@@ -52,11 +52,11 @@ Search blogs from WordPress APIs based on username, blog ID, or text.
 
 ## Analyze Blog Quality:
 
-POST /api/gemini//v1/review
+POST /api/gemini/v1/review
 
 Endpoint to analyze the quality of a blog post using Vertex AI. Requires a JSON payload with blog content.
 
-# Run the application:
+## Running the application:
 
 bash
 Copy code
