@@ -8,6 +8,8 @@ public class Post {
     private Title title;
     private String url;
     private String status;
+    private Long authorId;
+    private String authorName;
 
     @Data
     public static class Title {

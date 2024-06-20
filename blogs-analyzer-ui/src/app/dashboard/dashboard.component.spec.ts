@@ -1,8 +1,11 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 
 import { DashboardComponent } from './dashboard.component';
-import {HeaderComponent} from "./components/header/header.component";
-import {RouterTestingModule} from "@angular/router/testing";
+import { HeaderComponent } from "./components/header/header.component";
+import { RouterTestingModule } from "@angular/router/testing";
+import { HomeComponent } from "./components/home/home.component";
+import { HttpClientModule } from "@angular/common/http";
+import { NO_ERRORS_SCHEMA } from "@angular/core";
 
 describe('DashboardComponent', () => {
   let component: DashboardComponent;
@@ -10,8 +13,9 @@ describe('DashboardComponent', () => {
 
   beforeEach(() => {
     TestBed.configureTestingModule({
-      declarations: [DashboardComponent, HeaderComponent],
-      imports: [RouterTestingModule]
+      declarations: [DashboardComponent, HeaderComponent, HomeComponent],
+      imports: [RouterTestingModule, HttpClientModule],
+      schemas: [NO_ERRORS_SCHEMA]
     });
     fixture = TestBed.createComponent(DashboardComponent);
     component = fixture.componentInstance;

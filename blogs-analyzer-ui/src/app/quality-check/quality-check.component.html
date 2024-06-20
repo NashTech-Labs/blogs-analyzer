@@ -1,0 +1,20 @@
+<app-header></app-header>
+
+<button mat-button (click)="goBack()" class="back-btn p-3 m-3">
+    <mat-icon class="back-btn">arrow_back</mat-icon>
+    Back
+</button>
+
+<div class="container">
+    <div class="blog-content">
+        <h2>HTML Preview</h2>
+        <mat-card class="blog-card">
+            <div [innerHTML]="postData"></div>
+        </mat-card>
+    </div>
+    <button class="search-btn" (click)="checkQuality()">Check Blog's Quality</button>
+    <div *ngIf="qualityResult" class="result-box">
+        <h2>Quality Result</h2>
+        <textarea readonly>{{ qualityResult }}</textarea>
+    </div>
+</div>
