@@ -20,7 +20,7 @@ Users can then click on the "Check Quality of Blog" button, which evaluates and 
 
 ### Development server
 
-Run `ng serve` for a development server. Navigate to `http://localhost:4200/`. The application will automatically reload
+Run `npm start` for a development server. Navigate to `http://localhost:4200/`. The application will automatically reload
 if you change any of the source files.
 
 ### Code scaffolding
@@ -57,7 +57,7 @@ To set up and run the project locally, follow these steps:
    ```
 3. **Run the development server:**
    ```bash
-   ng serve
+   npm start
    ```
    Navigate to http://localhost:4200/ in your browser. The application will automatically reload if you change any of
    the source files.

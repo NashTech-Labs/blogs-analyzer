@@ -8,20 +8,24 @@
         <version>3.3.0</version>
         <relativePath/> <!-- lookup parent from repository -->
     </parent>
+
     <groupId>com.nashtech</groupId>
-    <artifactId>blogsAnalyzer</artifactId>
-    <version>0.0.1-SNAPSHOT</version>
-    <name>blogsAnalyzer</name>
-    <description>Blogs_Analyzer project for Spring Boot</description>
+    <artifactId>blogs-analyzer</artifactId>
+    <version>1.0.0</version>
+    <name>blogs-analyzer</name>
+
+    <description>Blogs Analyzer java competency</description>
 
     <properties>
         <java.version>21</java.version>
         <maven.sonar.version>3.9.1.2184</maven.sonar.version>
         <maven.jacoco.version>0.8.8</maven.jacoco.version>
         <spring-ai.version>1.0.0-M1</spring-ai.version>
+        <json.version>20231013</json.version>
     </properties>
 
     <dependencies>
+
         <dependency>
             <groupId>org.springframework.boot</groupId>
             <artifactId>spring-boot-starter-web</artifactId>
@@ -30,7 +34,7 @@
         <dependency>
             <groupId>org.json</groupId>
             <artifactId>json</artifactId>
-            <version>20231013</version>
+            <version>${json.version}</version>
         </dependency>
 
         <dependency>
@@ -38,23 +42,28 @@
             <artifactId>lombok</artifactId>
             <optional>true</optional>
         </dependency>
+
         <dependency>
             <groupId>org.springframework.boot</groupId>
             <artifactId>spring-boot-starter-test</artifactId>
             <scope>test</scope>
         </dependency>
+
         <dependency>
             <groupId>org.springframework.ai</groupId>
             <artifactId>spring-ai-vertex-ai-gemini-spring-boot-starter</artifactId>
         </dependency>
+
         <dependency>
             <groupId>org.springframework.ai</groupId>
             <artifactId>spring-ai-vertex-ai-palm2-spring-boot-starter</artifactId>
         </dependency>
+
         <dependency>
             <groupId>com.google.cloud</groupId>
             <artifactId>google-cloud-vertexai</artifactId>
         </dependency>
+
     </dependencies>
 
     <dependencyManagement>
