@@ -1,12 +1,13 @@
 import { Injectable } from '@angular/core';
 import { HttpClient, HttpParams } from '@angular/common/http';
 import { map, Observable } from 'rxjs';
+import { environment } from '../../environments/environment';
 
 @Injectable({
   providedIn: 'root'
 })
 export class BlogService {
-  private baseUrl = 'http://localhost:8888/api';
+  private baseUrl = environment.apiUrl;
 
 
   constructor(private http: HttpClient) {
