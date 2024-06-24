@@ -1,0 +1,12 @@
+spring:
+  ai:
+    vertex:
+      ai:
+        gemini:
+          project-id: gen-lang-client-0999974873
+          modelName: gemini-1.0-pro-vision-001
+          location: asia-south1
+  application:
+    name: blogs-analyzer
+server:
+  port: '8888'
