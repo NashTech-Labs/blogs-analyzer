@@ -36,7 +36,7 @@ public class GeminiConfiguration {
 
     @Bean
     @SessionScope
-    public ChatSession chatSession(@Qualifier("geminiProGenerativeModel") GenerativeModel generativeModel) {
+    public ChatSession chatSession(@Qualifier("geminiProVisionGenerativeModel") GenerativeModel generativeModel) {
         return new ChatSession(generativeModel);
     }
 }

@@ -43,8 +43,6 @@ export class TabularViewComponent implements OnInit {
           return '<button class="check-btn">Quality Check</button>';
         },
         onCellClicked: (params: { data: { id: number; }; }) => {
-          console.log('Cell clicked with ID:', params.data.id);
-
           this.blogService.getPostById(params.data.id).subscribe((response: any) => {
             this.router.navigate(['/quality-check'], {state: {data: response}});
           });
