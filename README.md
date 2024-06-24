@@ -26,6 +26,21 @@ Before starting, ensure you have the following installed and configured:
 - **Google Cloud SDK**: Install the Google Cloud SDK and authenticate with your Google Cloud account. Follow the
   instructions [here](https://cloud.google.com/sdk/docs/install). Then, log in to Google Cloud locally using the
   command: ```gcloud auth application-default login```
+  
+
+## Tech Stack
+
+  | Technology       | Version |
+  |------------------|---------|
+  | Java             | 21      |
+  | Spring Boot      | 3.3.x   |
+  | Angular          | 16      |
+  | Node.js          | 18.x    |
+  | Maven            | 3.9+    |
+  | Google Cloud SDK | Latest  |
+  | Vertex AI        | Latest  |
+  | WordPress API    | Latest  |
+
 
 ## Setup Instructions
 
@@ -101,13 +116,4 @@ Verify API functionality:
 Use the endpoints mentioned in the Endpoints section to verify functionality and interaction with WordPress APIs and
 Vertex AI.
 
-## Tech Stack
-- Java: 21
-- Spring Boot: 3.x
-- Angular: 16
-- Node.js: 18.x
-- Maven: 3.9+
-- Google Cloud SDK
-- Vertex AI
-- WordPress API
  

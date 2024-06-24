@@ -22,6 +22,5 @@ public class GeminiController {
     public String fromBodyPost(@RequestBody String prompt) throws IOException {
         GenerateContentResponse generateContentResponse = this.chatSession.sendMessage(prompt);
         return ResponseHandler.getText(generateContentResponse);
-        // return new ResponseEntity<>("Hello World!", HttpStatus.OK);
     }
 }
