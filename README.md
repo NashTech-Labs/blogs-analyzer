@@ -101,3 +101,13 @@ Verify API functionality:
 Use the endpoints mentioned in the Endpoints section to verify functionality and interaction with WordPress APIs and
 Vertex AI.
 
+## Tech Stack
+- Java: 21
+- Spring Boot: 3.x
+- Angular: 16
+- Node.js: 18.x
+- Maven: 3.9+
+- Google Cloud SDK
+- Vertex AI
+- WordPress API
+ 
