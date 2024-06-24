@@ -24,11 +24,6 @@ public class GeminiConfiguration {
     }
 
     @Bean
-    public GenerativeModel geminiProGenerativeModel(VertexAI vertexAI) {
-        return new GenerativeModel("gemini-1.0-pro-vision-001", vertexAI);
-    }
-
-    @Bean
     @SessionScope
     public ChatSession chatSession(@Qualifier("geminiProGenerativeModel") GenerativeModel generativeModel) {
         return new ChatSession(generativeModel);
