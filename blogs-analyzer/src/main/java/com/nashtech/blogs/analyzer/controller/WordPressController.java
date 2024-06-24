@@ -4,6 +4,7 @@ import com.nashtech.blogs.analyzer.model.Post;
 import org.json.JSONArray;
 import org.json.JSONObject;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.core.ParameterizedTypeReference;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpMethod;
@@ -26,7 +27,8 @@ public class WordPressController {
     @Autowired
     private RestTemplate restTemplate;
 
-    private final String WORDPRESS_API_BASE_URL = "https://blog.nashtechglobal.com/wp-json/wp/v2/";
+    @Value("${wordpress.api.base-url}")
+    private String WORDPRESS_API_BASE_URL;
 
     @GetMapping("/posts/{id}")
     public ResponseEntity<String> getPostById(@PathVariable Long id) {
