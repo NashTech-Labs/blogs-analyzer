@@ -19,7 +19,7 @@ export class TabularViewComponent implements OnInit {
 
   constructor(private blogService: BlogService, private router: Router) {
     this.columnDefs = [
-      {headerName: 'ID', field: 'id', width: 100},
+      {headerName: 'Blog ID', field: 'id', width: 100},
       {headerName: 'Title', field: 'title.rendered', flex: 2},
       {headerName: 'Author Name', field: 'authorName', flex: 1},
       {headerName: 'Status', field: 'status', flex: 1},

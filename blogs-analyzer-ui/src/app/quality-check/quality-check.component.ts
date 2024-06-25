@@ -9,7 +9,8 @@ import { BlogService } from "../services/blog.service";
 })
 export class QualityCheckComponent {
   postData: any;
-  qualityResult!: string;
+  qualityResults: { label: string, value: number, comment: string }[] = [];
+
 
   constructor(private location: Location, private blogService: BlogService) {
   }
@@ -25,33 +26,37 @@ export class QualityCheckComponent {
   checkQuality() {
     const prompt = 'Review blog with the following content: ' + this.postData +
       '\nParameters include fields like:\n' +
-      '- Plagiarism\n' +
-      '- Duplicate\n' +
-      '- Spelling Mistakes\n' +
-      '- Grammar\n' +
-      '- Overall SEO Report\n' +
-      '- Content Quality: Accuracy, Depth and Completeness, Clarity and Conciseness, Logical Flow\n' +
-      '- Technical Accuracy\n' +
-      '- Target Audience\n' +
-      '- Structure and Formatting\n' +
-      '- Code Examples and Illustrations\n' +
-      '- Links and References\n' +
-      '- Overall Feedback\n' +
-      '- Improvement Areas\n' +
-      'Display result for respective percentages and feedback';
+      '    - Duplicate Content\n' +
+      '    - Spelling Mistakes\n' +
+      '    - Grammatical Errors\n' +
+      '    - Overall SEO Report\n' +
+      '    - Content Quality: Accuracy, Depth and Completeness, Clarity and Conciseness, Logical Flow\n' +
+      '    - Technical Accuracy\n' +
+      '    - Targeted Audience\n' +
+      '    - Structure and Formatting\n' +
+      '    - Code Examples and Illustrations\n' +
+      '    - Links and References\n' +
+      '    - Overall Feedback\n' +
+      '    - Improvement Areas\n' +
+      'Display result in tabular view for respective percentages and feedback at that line no';
     this.blogService.getBlogQuality(prompt).subscribe(
       response => {
-        this.qualityResult = this.removeMarkdownFormatting(response);
+        this.qualityResults = this.parseResponse(response);
       },
       error => {
         console.error('Error:', error);
-        this.qualityResult = 'An error occurred';
       }
     );
   }
 
-  removeMarkdownFormatting(text: string) {
-    // Replace Markdown bold formatting with empty string
-    return text.replace(/\*\*(.*?)\*\*/g, '$1');
+  parseResponse(response: string): { label: string, value: number, comment: string }[] {
+    const rows = response.split('\n').slice(2);
+    return rows.map(row => {
+      const cols = row.split('|').map(col => col.trim());
+      const label = cols[1];
+      const percentage = parseFloat(cols[2].replace('%', ''));
+      const comment = cols[3];
+      return {label, value: isNaN(percentage) ? 0 : percentage, comment};
+    }).filter(result => result.label && !isNaN(result.value));
   }
 }

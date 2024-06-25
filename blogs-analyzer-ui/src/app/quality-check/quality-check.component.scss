@@ -75,3 +75,23 @@ textarea {
   border-radius: 4px;
   resize: none;
 }
+
+.charts-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+  gap: 20px;
+}
+
+.chart-item {
+  background-color: #fff;
+  padding: 10px;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+  border-radius: 8px;
+  text-align: center;
+}
+
+.comment {
+  margin-top: 10px;
+  font-size: 14px;
+  color: #555;
+}

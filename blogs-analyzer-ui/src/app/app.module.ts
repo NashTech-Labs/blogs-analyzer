@@ -16,6 +16,8 @@ import { MatIconModule } from "@angular/material/icon";
 import { HomeComponent } from './dashboard/components/home/home.component';
 import { QualityCheckComponent } from './quality-check/quality-check.component';
 import { MatButtonModule } from "@angular/material/button";
+import { ReportComponent } from './report/report.component';
+import { HighchartsChartModule } from "highcharts-angular";
 
 @NgModule({
   declarations: [
@@ -24,7 +26,8 @@ import { MatButtonModule } from "@angular/material/button";
     HeaderComponent,
     TabularViewComponent,
     HomeComponent,
-    QualityCheckComponent
+    QualityCheckComponent,
+    ReportComponent
   ],
   imports: [
     BrowserModule,
@@ -36,7 +39,8 @@ import { MatButtonModule } from "@angular/material/button";
     FormsModule,
     MatCardModule,
     MatIconModule,
-    MatButtonModule
+    MatButtonModule,
+    HighchartsChartModule
   ],
   providers: [],
   bootstrap: [AppComponent]

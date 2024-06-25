@@ -13,8 +13,14 @@
         </mat-card>
     </div>
     <button class="search-btn" (click)="checkQuality()">Check Blog's Quality</button>
-    <div *ngIf="qualityResult" class="result-box">
-        <h2>Quality Result</h2>
-        <textarea readonly>{{ qualityResult }}</textarea>
+    <div class="charts-grid">
+        <div *ngFor="let result of qualityResults" class="chart-item">
+            <app-report
+                    [chartLabels]="[result.label]"
+                    [chartData]="[result.value]"
+                    [chartTitle]="result.label">
+            </app-report>
+            <div class="comment">{{ result.comment }}</div>
+        </div>
     </div>
 </div>
