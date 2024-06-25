@@ -6,6 +6,8 @@ spring:
           project-id: gen-lang-client-0999974873
           modelName: gemini-1.0-pro-vision-001
           location: asia-south1
+          google-native-api-base-url: "https://generativelanguage.googleapis.com"
+          google-native-api-key: "AIzaSyAqkkpQJ@@@@@@@@@@@yaFwKM"
   application:
     name: blogs-analyzer
 server:
