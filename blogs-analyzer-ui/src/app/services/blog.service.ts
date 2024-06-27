@@ -41,7 +41,7 @@ export class BlogService {
   }
 
   getBlogQuality(prompt: string): Observable<any> {
-    const url = `${this.baseUrl}/gemini/v1/review`;
+    const url = `${this.baseUrl}/vertex/v1/review`;
     return this.http.post(url, prompt, { responseType: 'text' });
   }
 }

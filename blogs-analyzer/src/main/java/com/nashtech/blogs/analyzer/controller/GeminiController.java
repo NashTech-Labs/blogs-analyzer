@@ -28,57 +28,59 @@ import java.util.List;
 
 
 @RestController
-@RequestMapping("/api/gemini")
+@RequestMapping("/api/gemini/v1")
 @RequiredArgsConstructor
 public class GeminiController {
-    private final ChatSession chatSession;
-
+   
     @Autowired
     private RestTemplate restTemplate;
 
+    @Autowired
+    ObjectMapper objectMapper;
+    
     @Value("${spring.ai.vertex.ai.gemini.google-native-api-base-url}")
     private String GOOGLE_API_BASE_URL;
 
     @Value("${spring.ai.vertex.ai.gemini.google-native-api-key}")
     private String GOOGLE_GEMINI_API_KEY;
 
+    @Value("${spring.ai.vertex.ai.gemini.google-native-api-geminiModel}")
+    private String GOOGLE_NATIVE_GEMINI_MODEL;
 
-    @PostMapping("/v1/review")
-    public String fromBodyPost(@RequestBody String prompt) throws IOException {
-        GenerateContentResponse generateContentResponse = this.chatSession.sendMessage(prompt);
-        return ResponseHandler.getText(generateContentResponse);
-    }
 
-    @GetMapping("/v1/history/{text}")
-    public List<String> getChatSessionHistory(@PathVariable String text) throws IOException {
-        GenerateContentResponse generateContentResponse = this.chatSession.sendMessage(text);
-        List<Content> history = this.chatSession.getHistory();
-        return history.stream().flatMap(h -> h.getPartsList().stream()).map(part -> part.getText()).toList();
-    }
-
-    @PostMapping("/v2/review")
+    @PostMapping("/review")
     public ResponseEntity<String> fromGoogleNativeAPIForGemini(@RequestBody String text) throws IOException {
 
-        String url = GOOGLE_API_BASE_URL + "/v1beta/models/gemini-1.5-flash-latest:generateContent?key=" + GOOGLE_GEMINI_API_KEY;
+        String url = GOOGLE_API_BASE_URL + "/v1beta/models/" + GOOGLE_NATIVE_GEMINI_MODEL + ":generateContent?key=" + GOOGLE_GEMINI_API_KEY;
+        OutgoingRequest requestBody = createRequestBody(text);
         HttpHeaders headers = new HttpHeaders();
         headers.setContentType(MediaType.APPLICATION_JSON);
+        HttpEntity<OutgoingRequest> requestEntity = new HttpEntity<>(requestBody, headers);
+        String response = restTemplate.postForObject(url, requestEntity, String.class);
+        String extractedText = extractTextFromResponse(response);
+        return ResponseEntity.ok(extractedText);
+    }
+
+    private OutgoingRequest createRequestBody(String text) {
         OutgoingRequest requestBody = new OutgoingRequest();
         OutgoingRequest.Content content = new OutgoingRequest.Content();
         OutgoingRequest.Content.Part part = new OutgoingRequest.Content.Part();
         part.setText(text);
         content.setParts(new OutgoingRequest.Content.Part[]{part});
         requestBody.setContents(new OutgoingRequest.Content[]{content});
-        HttpEntity<OutgoingRequest> requestEntity = new HttpEntity<>(requestBody, headers);
-        String response = restTemplate.postForObject(url, requestEntity, String.class);
-        ObjectMapper objectMapper = new ObjectMapper();
-        JsonNode rootNode = objectMapper.readTree(response);
-        JsonNode candidatesNode = rootNode.path("candidates");
-        JsonNode firstCandidate = candidatesNode.get(0);
-        JsonNode contentNode = firstCandidate.path("content");
-        JsonNode partsNode = contentNode.path("parts");
-        JsonNode firstPart = partsNode.get(0);
-        String textValue = firstPart.path("text").asText();
-        return ResponseEntity.ok(textValue.toString());
+        return requestBody;
     }
 
+    private String extractTextFromResponse(String response) throws IOException {
+        ObjectMapper objectMapper = new ObjectMapper();
+        JsonNode rootNode = objectMapper.readTree(response);
+        return rootNode.path("candidates")
+                .get(0)
+                .path("content")
+                .path("parts")
+                .get(0)
+                .path("text")
+                .asText();
+    }
+    
 }
