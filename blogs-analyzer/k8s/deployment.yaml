@@ -1,0 +1,24 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: blogs-analyzer
+  labels:
+    app: blogs-analyzer
+spec:
+  replicas: 3
+  selector:
+    matchLabels:
+      app: blogs-analyzer
+  template:
+    metadata:
+      labels:
+        app: blogs-analyzer
+    spec:
+      containers:
+        - name: blogs-analyzer
+          image: blogs-analyzer:latest
+          ports:
+            - containerPort: 8080
+          env:
+            - name: SPRING_PROFILES_ACTIVE
+              value: "prod"
