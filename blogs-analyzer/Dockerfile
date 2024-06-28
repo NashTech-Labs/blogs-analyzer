@@ -4,4 +4,4 @@ WORKDIR /opt
 
 COPY /target/blogs-analyzer-1.0.0.jar .
 
-CMD ["java","-jar", "./cart-service-1.0.0.jar"]
+CMD ["java","-jar", "./blogs-analyzer-1.0.0.jar"]
