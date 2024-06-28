@@ -1,1 +1,1 @@
-export const environment = { production: false, apiUrl: 'http://34.118.238.200:80/api' };
+export const environment = { production: true, apiUrl: 'http://34.118.238.200:8081/api' };

@@ -17,6 +17,9 @@ spec:
       containers:
         - name: blogs-analyzer
           image: gcr.io/gen-lang-client-0999974873/blogs-analyzer:latest
+          env:
+            - name: GOOGLE_GEMINI_API_KEY
+              value: "AIzaSyAqkkpQJOv4mi-H8qgGeP58kfTzNyaFwKM"
           ports:
             - containerPort: 8081
           imagePullPolicy: Always
