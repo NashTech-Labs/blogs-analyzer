@@ -3,7 +3,7 @@ kind: Deployment
 metadata:
   name: blogs-analyzer-ui
 spec:
-  replicas: 3
+  replicas: 1
   selector:
     matchLabels:
       app: blogs-analyzer-ui
@@ -17,3 +17,4 @@ spec:
           image: gcr.io/gen-lang-client-0999974873/blogs-analyzer-ui:latest
           ports:
             - containerPort: 80
+          imagePullPolicy: Always
