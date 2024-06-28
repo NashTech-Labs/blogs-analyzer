@@ -106,6 +106,9 @@ jobs:
             echo "Building and pushing Docker image for $SERVICE_NAME"
             if [ -d "$SERVICE_NAME" ]; then
               cd $SERVICE_NAME
+              if [ "$SERVICE_NAME" != "blogs-analyzer-ui" ]; then
+                mvn clean install -DskipTests
+              fi
               IMAGE_NAME=gcr.io/gen-lang-client-0999974873/$SERVICE_NAME:latest
               docker build -t $IMAGE_NAME .
               docker push $IMAGE_NAME
