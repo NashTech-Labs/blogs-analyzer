@@ -7,12 +7,12 @@ spring:
           modelName: gemini-1.0-pro-vision-001
           location: asia-south1
           google-native-api-base-url: "https://generativelanguage.googleapis.com"
-          google-native-api-key: ${GOOGLE_GEMINI_API_KEY}
+          google-native-api-key: "AIzaSyAqkkpQJOv4mi-H8qgGeP58kfTzNyaFwKM"
           google-native-api-geminiModel: "gemini-1.5-flash-latest"
   application:
     name: blogs-analyzer
 server:
-  port: '8888'
+  port: '8081'
 wordpress:
   api:
     base-url: "https://blog.nashtechglobal.com/wp-json/wp/v2/"

@@ -17,4 +17,11 @@ spec:
           image: gcr.io/gen-lang-client-0999974873/blogs-analyzer-ui:latest
           ports:
             - containerPort: 80
+          resources:
+            requests:
+              memory: "512Mi"
+              cpu: "500m"
+            limits:
+              memory: "1Gi"
+              cpu: "1"
           imagePullPolicy: Always
