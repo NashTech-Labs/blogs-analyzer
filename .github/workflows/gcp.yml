@@ -92,6 +92,7 @@ jobs:
 
       - name: Build and Push Docker Images
         run: |
+          COMMIT_SHA=$(git rev-parse --short HEAD)
           SERVICE_NAMES=$(cat projects-changes-deploy.txt)
           echo "Service Names: $SERVICE_NAMES"
           for SERVICE_NAME in $(echo $SERVICE_NAMES | tr ',' ' '); do
@@ -101,7 +102,7 @@ jobs:
               if [ "$SERVICE_NAME" != "blogs-analyzer-ui" ]; then
                 mvn clean install -DskipTests
               fi
-              IMAGE_NAME=gcr.io/gen-lang-client-0999974873/$SERVICE_NAME:latest
+              IMAGE_NAME=gcr.io/gen-lang-client-0999974873/$SERVICE_NAME:$COMMIT_SHA
               docker build -t $IMAGE_NAME .
               docker push $IMAGE_NAME
               cd ..
@@ -112,13 +113,13 @@ jobs:
         run: |
           echo "Getting credentials for cluster ${{ env.CLUSTER_NAME }} in zone ${{ env.REGION }}"
           gcloud container clusters get-credentials blogs-analyzer-cluster --region asia-south1 --project gen-lang-client-0999974873
+          COMMIT_SHA=$(git rev-parse --short HEAD)
           SERVICE_NAMES=$(cat projects-changes-deploy.txt)
           echo "Service Names: $SERVICE_NAMES"
           for SERVICE_NAME in $(echo $SERVICE_NAMES | tr ',' ' '); do
             echo "Deploying $SERVICE_NAME to GKE"
-            if [ -d "$SERVICE_NAME" ]; then
-              cd $SERVICE_NAME/k8s
-              kubectl apply -f .
-              cd ../..
+           if [ -d "$SERVICE_NAME/k8s" ]; then
+              sed -i "s|gcr.io/gen-lang-client-0999974873/$SERVICE_NAME:latest|gcr.io/gen-lang-client-0999974873/$SERVICE_NAME:$COMMIT_SHA|g" $SERVICE_NAME/k8s/deployment.yaml
+              kubectl apply -f $SERVICE_NAME/k8s/
             fi
           done
