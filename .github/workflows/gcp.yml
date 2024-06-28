@@ -12,6 +12,7 @@ env:
   REGION: ${{ secrets.GKE_ZONE }}
   REGISTRY_NAME: blogs-analyzer
   SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
+  GOOGLE_GEMINI_API_KEY: ${{ secrets.GOOGLE_GEMINI_API_KEY }}
 
 jobs:
   build:
