@@ -66,7 +66,7 @@ jobs:
       - name: Setup Google Cloud SDK
         uses: google-github-actions/setup-gcloud@v0.2.0
         with:
-          project_id: ${{ env.GKE_PROJECT }}
+          project_id: ${{ env.PROJECT_ID }}
           service_account_key: ${{ env.SERVICE_ACCOUNT_KEY }}
 
       - name: Authenticate to Google Cloud
@@ -102,7 +102,7 @@ jobs:
               if [ "$SERVICE_NAME" != "blogs-analyzer-ui" ]; then
                 mvn clean install -DskipTests
               fi
-              IMAGE_NAME=gcr.io/gen-lang-client-0999974873/$SERVICE_NAME:$COMMIT_SHA
+              IMAGE_NAME=gcr.io/${{ env.PROJECT_ID }}/$SERVICE_NAME:$COMMIT_SHA
               docker build -t $IMAGE_NAME .
               docker push $IMAGE_NAME
               cd ..
@@ -112,14 +112,14 @@ jobs:
       - name: Deploy to GKE
         run: |
           echo "Getting credentials for cluster ${{ env.CLUSTER_NAME }} in zone ${{ env.REGION }}"
-          gcloud container clusters get-credentials blogs-analyzer-cluster --region asia-south1 --project gen-lang-client-0999974873
+          gcloud container clusters get-credentials ${{ env.CLUSTER_NAME }} --region ${{ env.REGION }} --project ${{ env.PROJECT_ID }}
           COMMIT_SHA=$(git rev-parse --short HEAD)
           SERVICE_NAMES=$(cat projects-changes-deploy.txt)
           echo "Service Names: $SERVICE_NAMES"
           for SERVICE_NAME in $(echo $SERVICE_NAMES | tr ',' ' '); do
             echo "Deploying $SERVICE_NAME to GKE"
-           if [ -d "$SERVICE_NAME/k8s" ]; then
-              sed -i "s|gcr.io/gen-lang-client-0999974873/$SERVICE_NAME:latest|gcr.io/gen-lang-client-0999974873/$SERVICE_NAME:$COMMIT_SHA|g" $SERVICE_NAME/k8s/deployment.yaml
+            if [ -d "$SERVICE_NAME/k8s" ]; then
+              sed -i "s|gcr.io/${{ env.PROJECT_ID }}/$SERVICE_NAME:latest|gcr.io/${{ env.PROJECT_ID }}/$SERVICE_NAME:$COMMIT_SHA|g" $SERVICE_NAME/k8s/deployment.yaml
               kubectl apply -f $SERVICE_NAME/k8s/
             fi
           done
