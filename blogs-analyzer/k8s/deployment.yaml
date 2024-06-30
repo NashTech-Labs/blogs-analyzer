@@ -21,7 +21,7 @@ spec:
             - name: GOOGLE_GEMINI_API_KEY
               value: "AIzaSyAqkkpQJOv4mi-H8qgGeP58kfTzNyaFwKM"
           ports:
-            - containerPort: 80
+            - containerPort: 8081
           resources:
             requests:
               memory: "512Mi"
