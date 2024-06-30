@@ -21,7 +21,9 @@ spec:
             - name: GOOGLE_GEMINI_API_KEY
               value: "AIzaSyAqkkpQJOv4mi-H8qgGeP58kfTzNyaFwKM"
           ports:
-            - containerPort: 8081
+            - name: http
+              containerPort: 8081
+              protocol: TCP
           imagePullPolicy: Always
           resources:
             requests:

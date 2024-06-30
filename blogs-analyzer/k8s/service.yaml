@@ -3,11 +3,10 @@ kind: Service
 metadata:
   name: blogs-analyzer
 spec:
+  ports:
+    - name: http
+      port: 8082
+      targetPort: 8082
   selector:
     app: blogs-analyzer
-  ports:
-    - protocol: TCP
-      port: 80
-      targetPort: 8081
-      nodePort: 30081
   type: NodePort
