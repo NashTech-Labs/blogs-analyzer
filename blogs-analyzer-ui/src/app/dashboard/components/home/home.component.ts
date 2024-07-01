@@ -15,9 +15,6 @@ export class HomeComponent {
   constructor(private blogService: BlogService, private router: Router) {
   }
 
-  ngOnInit(): void {
-  }
-
   searchByTitle() {
     if (this.searchTitle) {
       this.blogService.searchPostsByTitle(this.searchTitle).subscribe((data: any[]) => {

@@ -1,6 +1,6 @@
-import { Component, Input, OnChanges, SimpleChanges } from '@angular/core';
+import { Component, Input, OnChanges } from '@angular/core';
 import * as Highcharts from 'highcharts';
-import { Options } from "highcharts";
+import { Options } from 'highcharts';
 
 @Component({
   selector: 'app-report',

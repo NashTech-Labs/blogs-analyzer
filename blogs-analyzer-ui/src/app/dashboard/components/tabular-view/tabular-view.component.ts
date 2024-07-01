@@ -9,7 +9,7 @@ import { BlogService } from "../../../services/blog.service";
 })
 export class TabularViewComponent implements OnInit {
   protected columnDefs: any[];
-  protected rowData: any[];
+  rowData: any[];
   loading: boolean = true;
   currentPage: number = 1;
   pageSize: number = 10;
@@ -17,7 +17,7 @@ export class TabularViewComponent implements OnInit {
   totalPages: number = 1;
   @Output() clickEvent = new EventEmitter<number>();
 
-  constructor(private blogService: BlogService, private router: Router) {
+  constructor(public blogService: BlogService, public router: Router) {
     this.columnDefs = [
       {headerName: 'Blog ID', field: 'id', width: 100},
       {headerName: 'Title', field: 'title.rendered', flex: 2},
@@ -59,8 +59,8 @@ export class TabularViewComponent implements OnInit {
 
   fetchPosts(page: number): void {
     this.loading = true;
-    this.blogService.getAllPosts(page, this.pageSize).subscribe(
-      (data: any) => {
+    this.blogService.getAllPosts(page, this.pageSize).subscribe({
+      next: (data: any) => {
         this.rowData = data.posts.map((post: any) => {
           return {
             id: post.id,
@@ -75,11 +75,11 @@ export class TabularViewComponent implements OnInit {
         this.isLastPage = data.isLastPage;
         this.loading = false;
       },
-      (error: any) => {
+      error: (error: any) => {
         console.error('Error fetching posts:', error);
         this.loading = false;
       }
-    );
+    });
   }
 
   onPageChange(page: number): void {

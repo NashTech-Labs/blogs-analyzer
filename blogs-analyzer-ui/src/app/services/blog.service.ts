@@ -1,5 +1,5 @@
 import { Injectable } from '@angular/core';
-import { HttpClient, HttpParams } from '@angular/common/http';
+import { HttpClient } from '@angular/common/http';
 import { map, Observable } from 'rxjs';
 import { environment } from '../../environments/environment';
 
@@ -42,6 +42,6 @@ export class BlogService {
 
   getBlogQuality(prompt: string): Observable<any> {
     const url = `${this.baseUrl}/gemini/v1/review`;
-    return this.http.post(url, prompt, { responseType: 'text' });
+    return this.http.post(url, prompt, {responseType: 'text'});
   }
 }
