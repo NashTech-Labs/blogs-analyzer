@@ -19,7 +19,7 @@ spec:
           image: gcr.io/gen-lang-client-0999974873/blogs-analyzer:latest
           env:
             - name: GOOGLE_GEMINI_API_KEY
-              value: "AIzaSyAqkkpQJOv4mi-H8qgGeP58kfTzNyaFwKM"
+              value: "AIzaSyBVXC1CEsJvqu3Lp9f_QuFoLYuzP3yJTGU"
           ports:
             - containerPort: 8081
           resources:
