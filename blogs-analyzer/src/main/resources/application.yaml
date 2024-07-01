@@ -12,7 +12,7 @@ spring:
   application:
     name: blogs-analyzer
 server:
-  port: '8888'
+  port: '8081'
 wordpress:
   api:
     base-url: "https://blog.nashtechglobal.com/wp-json/wp/v2/"

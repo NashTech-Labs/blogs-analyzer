@@ -9,8 +9,23 @@ import { BlogService } from "../services/blog.service";
 })
 export class QualityCheckComponent {
   postData: any;
-  qualityResults: { label: string, value: number, comment: string }[] = [];
-
+  qualityResults: { originalLabel: string; oppositeLabel: string; value: number; comment: string }[] = [];
+  labels = [
+    {actual: 'Duplicate Content', opposite: 'Original Content'},
+    {actual: 'Spelling Mistakes', opposite: 'Correct Spelling'},
+    {actual: 'Grammatical Errors', opposite: 'Proper Grammar'},
+    {actual: 'Overall SEO Report', opposite: 'SEO Optimization'},
+    {actual: 'Accuracy', opposite: 'Inaccuracy'},
+    {actual: 'Depth and Completeness', opposite: 'Superficiality'},
+    {actual: 'Clarity and Conciseness', opposite: 'Ambiguity and verbosity'},
+    {actual: 'Logical Flow', opposite: 'Disorganization'},
+    {actual: 'Technical Accuracy', opposite: 'Inaccuracy'},
+    {actual: 'Targeted Audience', opposite: 'General Audience'},
+    {actual: 'Structure and Formatting', opposite: 'Poor Structure and Formatting'},
+    {actual: 'Code Examples and Illustrations', opposite: 'Lack of Code Examples and Illustrations'},
+    {actual: 'Links and References', opposite: 'Missing Links and References'},
+    {actual: 'Overall Feedback', opposite: 'No Feedback'}
+  ];
 
   constructor(private location: Location, private blogService: BlogService) {
   }
@@ -24,21 +39,12 @@ export class QualityCheckComponent {
   }
 
   checkQuality() {
-    const prompt = 'Review blog with the following content: ' + this.postData +
-      '\nParameters include fields like:\n' +
-      '    - Duplicate Content\n' +
-      '    - Spelling Mistakes\n' +
-      '    - Grammatical Errors\n' +
-      '    - Overall SEO Report\n' +
-      '    - Content Quality: Accuracy, Depth and Completeness, Clarity and Conciseness, Logical Flow\n' +
-      '    - Technical Accuracy\n' +
-      '    - Targeted Audience\n' +
-      '    - Structure and Formatting\n' +
-      '    - Code Examples and Illustrations\n' +
-      '    - Links and References\n' +
-      '    - Overall Feedback\n' +
-      '    - Improvement Areas\n' +
-      'Display result in tabular view for respective percentages and feedback at that line no';
+
+    const prompt = `Review blog with the following content: ${this.postData}
+    Parameters include fields like:
+    ${this.labels.map(label => `- ${label.actual}`).join('\n')}
+    Display result in tabular view for respective percentages and accurate feedback;`;
+
     this.blogService.getBlogQuality(prompt).subscribe(
       response => {
         this.qualityResults = this.parseResponse(response);
@@ -49,14 +55,24 @@ export class QualityCheckComponent {
     );
   }
 
-  parseResponse(response: string): { label: string, value: number, comment: string }[] {
+  parseResponse(response: string): { originalLabel: string; oppositeLabel: string; value: number; comment: string }[] {
     const rows = response.split('\n').slice(2);
-    return rows.map(row => {
+    const pairedResults: { originalLabel: string; oppositeLabel: string; value: number; comment: string }[] = [];
+
+    rows.forEach(row => {
       const cols = row.split('|').map(col => col.trim());
-      const label = cols[1];
-      const percentage = parseFloat(cols[2].replace('%', ''));
-      const comment = cols[3];
-      return {label, value: isNaN(percentage) ? 0 : percentage, comment};
-    }).filter(result => result.label && !isNaN(result.value));
+      if (cols.length < 3) return;
+
+      let label = cols[1]?.replace(/\*\*/g, '');
+      let percentage = parseFloat(cols[2]?.replace('%', ''));
+      let comment = cols?.slice(3).join(' ').trim();
+
+      const oppositeIndex = this.labels.findIndex(l => l.actual === label);
+      if (oppositeIndex !== -1) {
+        const oppositeLabel = this.labels[oppositeIndex].opposite;
+        pairedResults.push({originalLabel: label, oppositeLabel, value: percentage, comment});
+      }
+    });
+    return pairedResults;
   }
 }

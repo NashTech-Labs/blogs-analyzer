@@ -18,6 +18,7 @@ import { QualityCheckComponent } from './quality-check/quality-check.component';
 import { MatButtonModule } from "@angular/material/button";
 import { ReportComponent } from './report/report.component';
 import { HighchartsChartModule } from "highcharts-angular";
+import { MarkdownModule } from "ngx-markdown";
 
 @NgModule({
   declarations: [
@@ -40,7 +41,8 @@ import { HighchartsChartModule } from "highcharts-angular";
     MatCardModule,
     MatIconModule,
     MatButtonModule,
-    HighchartsChartModule
+    HighchartsChartModule,
+    MarkdownModule.forRoot(),
   ],
   providers: [],
   bootstrap: [AppComponent]

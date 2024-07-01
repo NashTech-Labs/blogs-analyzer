@@ -13,6 +13,7 @@ Blogs-Analyzer-UI is an Angular application used to display the results on a use
 - [Dependencies](#dependencies)
 - [Endpoints](#endpoints)
 - [Running the Application](#running-the-application)
+- [Tech Stack](#tech-stack)
 
 ## Prerequisites
 
