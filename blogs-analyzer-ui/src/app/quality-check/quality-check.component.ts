@@ -39,20 +39,19 @@ export class QualityCheckComponent {
   }
 
   checkQuality() {
-
     const prompt = `Review blog with the following content: ${this.postData}
     Parameters include fields like:
     ${this.labels.map(label => `- ${label.actual}`).join('\n')}
     Display result in tabular view for respective percentages and accurate feedback;`;
 
-    this.blogService.getBlogQuality(prompt).subscribe(
-      response => {
+    this.blogService.getBlogQuality(prompt).subscribe({
+      next: response => {
         this.qualityResults = this.parseResponse(response);
       },
-      error => {
+      error: error => {
         console.error('Error:', error);
       }
-    );
+    });
   }
 
   parseResponse(response: string): { originalLabel: string; oppositeLabel: string; value: number; comment: string }[] {
