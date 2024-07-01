@@ -16,11 +16,12 @@
     <div class="charts-grid">
         <div *ngFor="let result of qualityResults" class="chart-item">
             <app-report
-                    [chartLabels]="[result.label]"
+                    [actualLabel]="[result.originalLabel]"
+                    [oppositeLabel]="[result.oppositeLabel]"
                     [chartData]="[result.value]"
-                    [chartTitle]="result.label">
+                    [chartTitle]="result.originalLabel">
             </app-report>
-            <div class="comment">{{ result.comment }}</div>
+            <div class="comment" [innerHTML]="result.comment | markdown"></div>
         </div>
     </div>
 </div>

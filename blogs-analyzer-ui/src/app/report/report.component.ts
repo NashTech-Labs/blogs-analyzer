@@ -1,4 +1,4 @@
-import { Component, Input } from '@angular/core';
+import { Component, Input, OnChanges, SimpleChanges } from '@angular/core';
 import * as Highcharts from 'highcharts';
 import { Options } from "highcharts";
 
@@ -7,8 +7,9 @@ import { Options } from "highcharts";
   templateUrl: './report.component.html',
   styleUrls: ['./report.component.scss']
 })
-export class ReportComponent {
-  @Input() chartLabels: string[] = [];
+export class ReportComponent implements OnChanges {
+  @Input() actualLabel: string[] = [];
+  @Input() oppositeLabel: string[] = [];
   @Input() chartData: number[] = [];
   @Input() chartTitle: string = '';
 
@@ -24,6 +25,11 @@ export class ReportComponent {
   }
 
   updateChartOptions() {
+    const pairedData = this.chartData.map(value => {
+      const emptyValue = 100 - value;
+      return [value, emptyValue];
+    });
+
     this.chartOptions = {
       chart: {
         type: 'pie'
@@ -41,11 +47,17 @@ export class ReportComponent {
       },
       series: [{
         type: 'pie',
-        data: this.chartLabels.map((label, index) => ({
-          name: label,
-          y: this.chartData[index]
-        }))
-      }]
-    };
+        data: this.actualLabel.map((label, index) => ({
+          name: `${label}`,
+          y: pairedData[index][0],
+        })).concat(this.oppositeLabel.map((label, index) => ({
+          name: `${label}`,
+          y: pairedData[index][1],
+        })))
+      }],
+      tooltip: {
+        pointFormat: '<b>{point.percentage:.1f}%</b>'
+      },
+    }
   }
 }
