@@ -29,7 +29,7 @@ public class WordPressController {
     private RestTemplate restTemplate;
 
     @Value("${wordpress.api.base-url}")
-    private String WORDPRESS_API_BASE_URL;
+    public String WORDPRESS_API_BASE_URL;
 
     @GetMapping("/posts/{id}")
     public ResponseEntity<String> getPostById(@PathVariable Long id) {
@@ -178,6 +178,9 @@ public class WordPressController {
     }
 
     private void fetchAuthorNames(List<Post> posts) {
+        if (posts == null) {
+            throw new IllegalArgumentException("Posts list cannot be null");
+        }
         Set<Long> authorIds = posts.stream().map(Post::getAuthorId).collect(Collectors.toSet());
         Map<Long, String> authorMap = new HashMap<>();
 
@@ -185,21 +188,19 @@ public class WordPressController {
             String authorUrl = WORDPRESS_API_BASE_URL + "users/" + authorId;
             ResponseEntity<Map<String, Object>> authorResponse = restTemplate.exchange(
                     authorUrl,
-                    HttpMethod.GET,
-                    null,
+                    HttpMethod.GET, null,
                     new ParameterizedTypeReference<>() {
                     }
             );
-
-            Map<String, Object> authorMapResponse = authorResponse.getBody();
-            if (authorMapResponse != null) {
+            if (authorResponse != null) {
+                Map<String, Object> authorMapResponse = authorResponse.getBody();
                 String authorName = (String) authorMapResponse.get("name");
                 authorMap.put(authorId, authorName);
             }
         }
 
         for (Post post : posts) {
-            if (authorMap.containsKey(post.getAuthorId())) {
+            if (post != null && authorMap.containsKey(post.getAuthorId())) {
                 post.setAuthorName(authorMap.get(post.getAuthorId()));
             }
         }

@@ -20,7 +20,7 @@
         <maven.compiler.source>21</maven.compiler.source>
         <maven.compiler.target>21</maven.compiler.target>
         <maven.sonar.version>3.9.1.2184</maven.sonar.version>
-        <maven.jacoco.version>0.8.8</maven.jacoco.version>
+        <maven.jacoco.version>0.8.12</maven.jacoco.version>
         <spring-ai.version>1.0.0-M1</spring-ai.version>
         <json.version>20231013</json.version>
     </properties>
@@ -112,6 +112,55 @@
         </pluginManagement>
         <plugins>
             <plugin>
+                <groupId>org.jacoco</groupId>
+                <artifactId>jacoco-maven-plugin</artifactId>
+                <version>${maven.jacoco.version}</version>
+                <configuration>
+                    <excludes>
+                        <exclude>**/*config*/**</exclude>
+                        <exclude>**/*model*/**</exclude>
+                        <exclude>**/*exception*/**</exclude>
+                        <exclude>**/*Application*</exclude>
+                        <exclude>**/resources/**</exclude>
+                    </excludes>
+                </configuration>
+                <executions>
+                    <execution>
+                        <id>prepare-agent</id>
+                        <goals>
+                            <goal>prepare-agent</goal>
+                        </goals>
+                        <phase>test-compile</phase>
+                    </execution>
+                    <execution>
+                        <id>report</id>
+                        <phase>test</phase>
+                        <goals>
+                            <goal>report</goal>
+                        </goals>
+                    </execution>
+                    <execution>
+                        <id>jacoco-check</id>
+                        <goals>
+                            <goal>check</goal>
+                        </goals>
+                        <configuration>
+                            <rules>
+                                <rule implementation="org.jacoco.maven.RuleConfiguration">
+                                    <element>PACKAGE</element>
+                                    <limits>
+                                        <limit implementation="org.jacoco.report.check.Limit">
+                                            <counter>LINE</counter>
+                                            <value>COVEREDRATIO</value>
+                                        </limit>
+                                    </limits>
+                                </rule>
+                            </rules>
+                        </configuration>
+                    </execution>
+                </executions>
+            </plugin>
+            <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-compiler-plugin</artifactId>
                 <version>3.13.0</version>
@@ -142,7 +191,7 @@
                 <activeByDefault>false</activeByDefault>
             </activation>
             <properties>
-                <!--	Sonar Config		-->
+                <!--    Sonar Config      -->
                 <sonar.organization>nashtech</sonar.organization>
                 <sonar.host.url>https://sonarcloud.io</sonar.host.url>
                 <sonarConfig>b47aeba29df2889126c736ee7012a5a490edc34a</sonarConfig> <!-- NOSONAR -->
@@ -150,7 +199,10 @@
                 <sonar.jacoco.reportPath>target/coverage-reports/jacoco.exec</sonar.jacoco.reportPath>
                 <sonar.coverage.exclusions>
                     **/*config*/**,
-                    **/*Application.*
+                    **/*Application*,
+                    **/*model*/**,
+                    **/*exception*/**,
+                    **/resources/**
                 </sonar.coverage.exclusions>
             </properties>
             <build>
