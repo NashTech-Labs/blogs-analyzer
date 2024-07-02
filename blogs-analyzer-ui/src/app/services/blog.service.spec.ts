@@ -2,19 +2,32 @@ import { TestBed } from '@angular/core/testing';
 import { HttpClientTestingModule, HttpTestingController } from '@angular/common/http/testing';
 import { BlogService } from './blog.service';
 import { environment } from '../../environments/environment';
+import { NGXLogger } from 'ngx-logger';
+import { HttpErrorResponse } from "@angular/common/http";
 
 describe('BlogService', () => {
   let service: BlogService;
   let httpMock: HttpTestingController;
   const baseUrl = environment.apiUrl;
+  let loggerSpy: jasmine.SpyObj<NGXLogger>;
 
   beforeEach(() => {
+    const loggerSpyObj = jasmine.createSpyObj('NGXLogger', ['debug', 'error']);
+
     TestBed.configureTestingModule({
-      providers: [BlogService],
+      providers: [
+        BlogService,
+        {provide: NGXLogger, useValue: loggerSpyObj}
+      ],
       imports: [HttpClientTestingModule]
     });
     service = TestBed.inject(BlogService);
     httpMock = TestBed.inject(HttpTestingController);
+    loggerSpy = TestBed.inject(NGXLogger) as jasmine.SpyObj<NGXLogger>;
+  });
+
+  afterEach(() => {
+    httpMock.verify();
   });
 
   afterEach(() => {
@@ -89,5 +102,56 @@ describe('BlogService', () => {
     expect(req.request.method).toBe('POST');
     expect(req.request.body).toBe(prompt);
     req.flush(mockResponse);
+  });
+
+  it('should handle client-side error', () => {
+    const clientSideError = new ErrorEvent('Client-side error', {message: 'Test client-side error message'});
+
+    const result = service.handleError(new HttpErrorResponse({
+      error: clientSideError,
+      status: 404,
+      statusText: 'Not Found'
+    }));
+
+    expect(loggerSpy.error).toHaveBeenCalledWith(`BlogService :: Encountered an error: Client-side error: Test client-side error message`);
+    result.subscribe({
+      error: (error: Error) => {
+        expect(error.message).toBe('Client-side error: Test client-side error message');
+      }
+    });
+  });
+
+  it('should handle server-side error', () => {
+    const serverSideError = new HttpErrorResponse({
+      error: 'Http failure response for (unknown url): 500 Internal Server Error',
+      status: 500,
+      statusText: 'Internal Server Error'
+    });
+
+    const result = service.handleError(serverSideError);
+
+    expect(loggerSpy.error).toHaveBeenCalledWith(`BlogService :: Encountered an error: Server-side error: Http failure response for (unknown url): 500 Internal Server Error`);
+    result.subscribe({
+      error: (error: Error) => {
+        expect(error.message).toBe('Server-side error: Http failure response for (unknown url): 500 Internal Server Error');
+      }
+    });
+  });
+
+  it('should throw default error when error object has no message', () => {
+    const errorWithoutMessage = new HttpErrorResponse({
+      error: {},
+      status: 400,
+      statusText: 'Bad Request'
+    });
+
+    const result = service.handleError(errorWithoutMessage);
+
+    expect(loggerSpy.error).toHaveBeenCalledWith(`BlogService :: Encountered an error: Server-side error: Http failure response for (unknown url): 400 Bad Request`);
+    result.subscribe({
+      error: (error: Error) => {
+        expect(error.message).toBe('Server-side error: Http failure response for (unknown url): 400 Bad Request');
+      }
+    });
   });
 });

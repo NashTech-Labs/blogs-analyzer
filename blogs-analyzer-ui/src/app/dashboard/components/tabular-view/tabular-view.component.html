@@ -6,28 +6,33 @@
     </div>
 </ng-container>
 <ng-template #dataLoaded>
-    <ag-grid-angular
-            style="width: 100%; height: 500px;"
-            class="ag-theme-alpine"
-            [rowData]="rowData"
-            [columnDefs]="columnDefs"
-            [suppressDragLeaveHidesColumns]="true"
-            [enableCellTextSelection]="true"
-            [ensureDomOrder]="true"
-    ></ag-grid-angular>
-    <div class="pagination">
-        <button (click)="navigateToFirstPage()" [disabled]="currentPage === 1">
-            <mat-icon>keyboard_double_arrow_left</mat-icon>
-        </button>
-        <button (click)="onPageChange(currentPage - 1)" [disabled]="currentPage === 1">
-            <mat-icon>navigate_before</mat-icon>
-        </button>
-        <span>Page {{ currentPage }} of {{ totalPages }}</span>
-        <button (click)="onPageChange(currentPage + 1)" [disabled]="currentPage === totalPages">
-            <mat-icon>navigate_next</mat-icon>
-        </button>
-        <button (click)="navigateToLastPage()" [disabled]="currentPage === totalPages">
-            <mat-icon>keyboard_double_arrow_right</mat-icon>
-        </button>
-    </div>
+    <ng-container *ngIf="errorMessage; else showData">
+        <div class="alert alert-danger mt-3" role="alert" [innerHTML]="errorMessage"></div>
+    </ng-container>
+    <ng-template #showData>
+        <ag-grid-angular
+                style="width: 100%; height: 500px;"
+                class="ag-theme-alpine"
+                [rowData]="rowData"
+                [columnDefs]="columnDefs"
+                [suppressDragLeaveHidesColumns]="true"
+                [enableCellTextSelection]="true"
+                [ensureDomOrder]="true"
+        ></ag-grid-angular>
+        <div class="pagination">
+            <button (click)="navigateToFirstPage()" [disabled]="currentPage === 1">
+                <mat-icon>keyboard_double_arrow_left</mat-icon>
+            </button>
+            <button (click)="onPageChange(currentPage - 1)" [disabled]="currentPage === 1">
+                <mat-icon>navigate_before</mat-icon>
+            </button>
+            <span>Page {{ currentPage }} of {{ totalPages }}</span>
+            <button (click)="onPageChange(currentPage + 1)" [disabled]="currentPage === totalPages">
+                <mat-icon>navigate_next</mat-icon>
+            </button>
+            <button (click)="navigateToLastPage()" [disabled]="currentPage === totalPages">
+                <mat-icon>keyboard_double_arrow_right</mat-icon>
+            </button>
+        </div>
+    </ng-template>
 </ng-template>

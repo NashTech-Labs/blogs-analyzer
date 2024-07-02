@@ -1,15 +1,20 @@
-import { Component } from '@angular/core';
+import { Component, OnInit } from '@angular/core';
 import { Location } from "@angular/common";
 import { BlogService } from "../services/blog.service";
+import { NGXLogger } from 'ngx-logger';
 
 @Component({
   selector: 'app-quality-check',
   templateUrl: './quality-check.component.html',
   styleUrls: ['./quality-check.component.scss']
 })
-export class QualityCheckComponent {
+export class QualityCheckComponent implements OnInit {
   postData: any;
   qualityResults: { originalLabel: string; oppositeLabel: string; value: number; comment: string }[] = [];
+  errorMessage: string | null = null;
+  overallFeedback: string | null = null;
+  overallRating: number = 0;
+
   labels = [
     {actual: 'Duplicate Content', opposite: 'Original Content'},
     {actual: 'Spelling Mistakes', opposite: 'Correct Spelling'},
@@ -24,18 +29,20 @@ export class QualityCheckComponent {
     {actual: 'Structure and Formatting', opposite: 'Poor Structure and Formatting'},
     {actual: 'Code Examples and Illustrations', opposite: 'Lack of Code Examples and Illustrations'},
     {actual: 'Links and References', opposite: 'Missing Links and References'},
-    {actual: 'Overall Feedback', opposite: 'No Feedback'}
+    {actual: 'Overall Feedback %', opposite: 'No Feedback'}
   ];
 
-  constructor(private location: Location, private blogService: BlogService) {
+  constructor(private location: Location, private blogService: BlogService, private logger: NGXLogger) {
   }
 
   ngOnInit(): void {
     this.postData = history?.state?.data;
+    this.logger.debug('Initialized QualityCheckComponent');
   }
 
   goBack(): void {
     this.location.back();
+    this.logger.debug('Navigated back');
   }
 
   checkQuality() {
@@ -44,12 +51,15 @@ export class QualityCheckComponent {
     ${this.labels.map(label => `- ${label.actual}`).join('\n')}
     Display result in tabular view for respective percentages and accurate feedback;`;
 
+    this.errorMessage = null;
     this.blogService.getBlogQuality(prompt).subscribe({
       next: response => {
         this.qualityResults = this.parseResponse(response);
+        this.logger.debug('Blog quality checked successfully :: ' + this.qualityResults);
       },
       error: error => {
-        console.error('Error:', error);
+        this.errorMessage = `Failed to check blog quality. Please try again later.<br><br>${error.message}`;
+        this.logger.error(`Error checking blog quality: ${error.message}`);
       }
     });
   }
@@ -66,10 +76,17 @@ export class QualityCheckComponent {
       let percentage = parseFloat(cols[2]?.replace('%', ''));
       let comment = cols?.slice(3).join(' ').trim();
 
+      if (label?.toUpperCase().startsWith('OVERALL FEEDBACK')) {
+        this.overallRating = isNaN(percentage) ? 4 : percentage / 20.0;
+        this.overallFeedback = comment;
+        this.logger.debug(`Overall Rating calculated: ${this.overallRating}`);
+        return;
+      }
       const oppositeIndex = this.labels.findIndex(l => l.actual === label);
       if (oppositeIndex !== -1) {
         const oppositeLabel = this.labels[oppositeIndex].opposite;
         pairedResults.push({originalLabel: label, oppositeLabel, value: percentage, comment});
+        this.logger.debug(`Parsed response for ${label}: ${percentage}%`);
       }
     });
     return pairedResults;

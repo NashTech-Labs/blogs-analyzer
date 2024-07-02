@@ -1,6 +1,6 @@
 .subscribe {
   position: relative;
-  height: 140px;
+  height: 180px;
   width: 300px;
   padding: 10px;
   background-color: #FFF;
@@ -9,18 +9,6 @@
   box-shadow: 0 0 10px 0 #9b9b9b,
   0 1px 1px 0 #9b9b9b,
   0 1px 1px 0 #9b9b9b;
-}
-
-.subscribe:after {
-  position: absolute;
-  content: "";
-  right: -10px;
-  bottom: 18px;
-  width: 0;
-  height: 0;
-  border-left: 0 solid transparent;
-  border-right: 10px solid transparent;
-  border-bottom: 10px solid #1a044e;
 }
 
 .subscribe p {
@@ -33,7 +21,7 @@
 
 .subscribe input {
   position: absolute;
-  bottom: 30px;
+  bottom: 60px;
   border: none;
   border-bottom: 1px solid #d4d4d4;
   padding: 10px;
@@ -60,8 +48,8 @@
   font-size: 12px;
   font-weight: bold;
   letter-spacing: 5px;
-  right: -10px;
-  bottom: -20px;
+  right: 0;
+  bottom: 10px;
   cursor: pointer;
   transition: all .25s ease;
   box-shadow: -5px 6px 20px 0px rgba(26, 26, 26, 0.4);
@@ -70,6 +58,14 @@
 .subscribe .search-btn:hover {
   background-color: #07013d;
   box-shadow: -5px 6px 20px 0px rgba(88, 88, 88, 0.569);
+}
+
+.error-message {
+  color: red;
+  font-size: 12px;
+  position: absolute;
+  bottom: 0;
+  left: 10px;
 }
 
 .tabular-view-wrapper {

@@ -7,6 +7,7 @@ import { MatIconModule } from "@angular/material/icon";
 import { MatCardModule } from "@angular/material/card";
 import { BlogService } from "../services/blog.service";
 import { of, throwError } from 'rxjs';
+import { LoggerModule, NgxLoggerLevel } from "ngx-logger";
 
 describe('QualityCheckComponent', () => {
   let component: QualityCheckComponent;
@@ -16,7 +17,10 @@ describe('QualityCheckComponent', () => {
   beforeEach(() => {
     TestBed.configureTestingModule({
       declarations: [QualityCheckComponent, HeaderComponent],
-      imports: [RouterTestingModule, HttpClientModule, MatIconModule, MatCardModule],
+      imports: [RouterTestingModule, HttpClientModule, MatIconModule, MatCardModule, LoggerModule.forRoot({
+        level: NgxLoggerLevel.DEBUG,
+        serverLogLevel: NgxLoggerLevel.ERROR
+      })],
       providers: [BlogService]
     });
     fixture = TestBed.createComponent(QualityCheckComponent);
@@ -52,7 +56,7 @@ describe('QualityCheckComponent', () => {
 - Structure and Formatting
 - Code Examples and Illustrations
 - Links and References
-- Overall Feedback
+- Overall Feedback %
     Display result in tabular view for respective percentages and accurate feedback;`;
 
     spyOn(blogService, 'getBlogQuality').and.returnValue(of(''));
@@ -66,8 +70,18 @@ describe('QualityCheckComponent', () => {
     | Duplicate Content | 10% | Some duplicate content |
     | Spelling Mistakes | 5% | Some spelling mistakes |`;
     const expectedResults = [
-      { originalLabel: 'Duplicate Content', oppositeLabel: 'Original Content', value: 10, comment: 'Some duplicate content' },
-      { originalLabel: 'Spelling Mistakes', oppositeLabel: 'Correct Spelling', value: 5, comment: 'Some spelling mistakes' }
+      {
+        originalLabel: 'Duplicate Content',
+        oppositeLabel: 'Original Content',
+        value: 10,
+        comment: 'Some duplicate content'
+      },
+      {
+        originalLabel: 'Spelling Mistakes',
+        oppositeLabel: 'Correct Spelling',
+        value: 5,
+        comment: 'Some spelling mistakes'
+      }
     ];
     const results = component.parseResponse(response);
     expect(results).toEqual(expectedResults);
@@ -85,16 +99,92 @@ describe('QualityCheckComponent', () => {
     | Duplicate Content | 10% | Some duplicate content |
     | Invalid Row`;
     const expectedResults = [
-      { originalLabel: 'Duplicate Content', oppositeLabel: 'Original Content', value: 10, comment: 'Some duplicate content' }
+      {
+        originalLabel: 'Duplicate Content',
+        oppositeLabel: 'Original Content',
+        value: 10,
+        comment: 'Some duplicate content'
+      }
     ];
     const results = component.parseResponse(response);
     expect(results).toEqual(expectedResults);
   });
 
-  it('should handle blogService.getBlogQuality error', () => {
-    spyOn(blogService, 'getBlogQuality').and.returnValue(throwError('Error occurred'));
-    const consoleSpy = spyOn(console, 'error');
+  it('should handle error in checkQuality()', () => {
+    component.postData = 'Sample blog content';
+    const expectedPrompt = `Review blog with the following content: Sample blog content
+  Parameters include fields like:
+  - Duplicate Content
+  - Spelling Mistakes
+  - Overall Feedback %
+  Display result in tabular view for respective percentages and accurate feedback;`;
+
+    spyOn(blogService, 'getBlogQuality').and.returnValue(throwError({message: 'Test error message'}));
     component.checkQuality();
-    expect(consoleSpy).toHaveBeenCalledWith('Error:', 'Error occurred');
+
+    expect(component.errorMessage).toContain('Failed to check blog quality');
+  });
+
+  it('should navigate back on goBack()', () => {
+    const locationSpy = spyOn(component['location'], 'back');
+    component.goBack();
+
+    expect(locationSpy).toHaveBeenCalled();
+  });
+
+  it('should parse a valid response correctly', () => {
+    const response = `
+  | Label | Percentage | Comment |
+  | Duplicate Content | 10% | Some duplicate content |
+  | Spelling Mistakes | 5% | Some spelling mistakes |`;
+    const expectedResults = [
+      {
+        originalLabel: 'Duplicate Content',
+        oppositeLabel: 'Original Content',
+        value: 10,
+        comment: 'Some duplicate content'
+      },
+      {
+        originalLabel: 'Spelling Mistakes',
+        oppositeLabel: 'Correct Spelling',
+        value: 5,
+        comment: 'Some spelling mistakes'
+      }
+    ];
+    const results = component.parseResponse(response);
+    expect(results).toEqual(expectedResults);
+  });
+
+  it('should handle an empty response', () => {
+    const response = '';
+    const results = component.parseResponse(response);
+    expect(results).toEqual([]);
+  });
+
+  it('should handle a response with partially valid rows', () => {
+    const response = `
+  | Label | Percentage | Comment |
+  | Duplicate Content | 10% | Some duplicate content |
+  | Invalid Row`;
+    const expectedResults = [
+      {
+        originalLabel: 'Duplicate Content',
+        oppositeLabel: 'Original Content',
+        value: 10,
+        comment: 'Some duplicate content'
+      }
+    ];
+    const results = component.parseResponse(response);
+    expect(results).toEqual(expectedResults);
+  });
+
+  it('should calculate overall rating and feedback correctly', () => {
+    const response = `
+  | Label | Percentage | Comment |
+  | OVERALL FEEDBACK % | 80% | Very good content |`;
+    const expectedOverallRating = 4;
+    component.parseResponse(response);
+    expect(component.overallRating).toEqual(expectedOverallRating);
+    expect(component.overallFeedback).toEqual('Very good content');
   });
 });

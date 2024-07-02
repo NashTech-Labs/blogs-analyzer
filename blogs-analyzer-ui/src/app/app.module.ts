@@ -19,6 +19,7 @@ import { MatButtonModule } from "@angular/material/button";
 import { ReportComponent } from './report/report.component';
 import { HighchartsChartModule } from "highcharts-angular";
 import { MarkdownModule } from "ngx-markdown";
+import { LoggerModule, NgxLoggerLevel } from "ngx-logger";
 
 @NgModule({
   declarations: [
@@ -43,6 +44,7 @@ import { MarkdownModule } from "ngx-markdown";
     MatButtonModule,
     HighchartsChartModule,
     MarkdownModule.forRoot(),
+    LoggerModule.forRoot({level: NgxLoggerLevel.DEBUG, serverLogLevel: NgxLoggerLevel.ERROR})
   ],
   providers: [],
   bootstrap: [AppComponent]

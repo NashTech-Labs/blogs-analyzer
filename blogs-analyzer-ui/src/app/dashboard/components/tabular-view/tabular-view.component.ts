@@ -1,6 +1,7 @@
 import { Component, EventEmitter, OnInit, Output } from '@angular/core';
 import { Router } from '@angular/router';
 import { BlogService } from "../../../services/blog.service";
+import { NGXLogger } from 'ngx-logger';
 
 @Component({
   selector: 'app-tabular-view',
@@ -16,8 +17,9 @@ export class TabularViewComponent implements OnInit {
   isLastPage: boolean = false;
   totalPages: number = 1;
   @Output() clickEvent = new EventEmitter<number>();
+  errorMessage: string | null = null;
 
-  constructor(public blogService: BlogService, public router: Router) {
+  constructor(public blogService: BlogService, public router: Router, public logger: NGXLogger) {
     this.columnDefs = [
       {headerName: 'Blog ID', field: 'id', width: 100},
       {headerName: 'Title', field: 'title.rendered', flex: 2},
@@ -39,19 +41,25 @@ export class TabularViewComponent implements OnInit {
         headerName: 'Quality Check',
         field: 'id',
         flex: 1,
-        cellRenderer: function () {
+        cellRenderer: () => {
           return '<button class="check-btn">Quality Check</button>';
         },
         onCellClicked: (params: { data: { id: number; }; }) => {
-          this.blogService.getPostById(params.data.id).subscribe((response: any) => {
-            this.router.navigate(['/quality-check'], {state: {data: response}});
+          this.logger.debug(`Initiating quality check for blog ID: ${params.data.id}`);
+          this.blogService.getPostById(params.data.id).subscribe({
+            next: (response: any) => {
+              this.router.navigate(['/quality-check'], {state: {data: response}});
+            },
+            error: (error: any) => {
+              this.logger.error(`Error fetching post by ID ${params.data.id}: ${error.message}`);
+              this.errorMessage = `Failed to fetch Data. Please try again later.<br><br>${error.message}`;
+            }
           });
         }
       }
-    ]
+    ];
     this.rowData = [];
   }
-
 
   ngOnInit(): void {
     this.fetchPosts(this.currentPage);
@@ -59,25 +67,26 @@ export class TabularViewComponent implements OnInit {
 
   fetchPosts(page: number): void {
     this.loading = true;
+    this.errorMessage = null;
+    this.logger.debug(`Fetching posts for page ${page} with page size ${this.pageSize}`);
     this.blogService.getAllPosts(page, this.pageSize).subscribe({
       next: (data: any) => {
-        this.rowData = data.posts.map((post: any) => {
-          return {
-            id: post.id,
-            authorName: post.authorName,
-            authorId: post.authorId,
-            title: post.title,
-            url: post.url,
-            status: post.status
-          };
-        });
+        this.rowData = data.posts.map((post: any) => ({
+          id: post.id,
+          authorName: post.authorName,
+          authorId: post.authorId,
+          title: post.title,
+          url: post.url,
+          status: post.status
+        }));
         this.totalPages = data.totalPages;
         this.isLastPage = data.isLastPage;
         this.loading = false;
       },
       error: (error: any) => {
-        console.error('Error fetching posts:', error);
         this.loading = false;
+        this.errorMessage = `Failed to fetch Data. Please try again later.<br><br>${error.message}`;
+        this.logger.error(`Error fetching posts for page ${page}: ${error.message}`);
       }
     });
   }

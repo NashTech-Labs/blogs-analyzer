@@ -1,10 +1,15 @@
 .container {
+  display: flex;
   justify-content: center;
   align-items: center;
+  flex-direction: column;
+  padding: 20px;
 }
 
 .blog-content {
+  display: flex;
   flex-direction: column;
+  width: 100%;
 }
 
 .blog-card {
@@ -95,3 +100,24 @@ textarea {
   font-size: 14px;
   color: #555;
 }
+
+.result-box {
+  border: 1px solid #ccc;
+  padding: 10px;
+  margin: 10px;
+  width: 300px;
+  background-color: #f9f9f9;
+}
+
+.result-box h3 {
+  margin: 10px 0;
+  font-size: 18px;
+}
+
+.stars {
+  display: inline-block;
+  font-size: 20px;
+  color: #f2b600;
+  position: relative;
+}
+

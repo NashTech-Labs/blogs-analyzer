@@ -32,7 +32,7 @@ export class ReportComponent implements OnChanges {
 
     this.chartOptions = {
       chart: {
-        type: 'pie'
+        type: 'pie',
       },
       title: {
         text: this.chartTitle

@@ -6,18 +6,21 @@
                 <input placeholder="Blog Title" class="subscribe-input" type="text" [(ngModel)]="searchTitle">
                 <br>
                 <button class="search-btn" (click)="searchByTitle()">Search</button>
+                <div *ngIf="errorMessage && errorContext === 'title'" class="error-message">{{ errorMessage }}</div>
             </div>
             <div class="subscribe">
                 <p>Search Blogs by Author Id</p>
                 <input placeholder="Author Id" class="subscribe-input" type="number" [(ngModel)]="authorId">
                 <br>
                 <button class="search-btn" (click)="getBlogByAuthorId()">Search</button>
+                <div *ngIf="errorMessage && errorContext === 'author'" class="error-message">{{ errorMessage }}</div>
             </div>
             <div class="subscribe">
                 <p>Search Blogs by ID</p>
                 <input placeholder="Blog Id" class="subscribe-input" type="number" [(ngModel)]="blogId">
                 <br>
                 <button class="search-btn" (click)="getBlogById()">Search</button>
+                <div *ngIf="errorMessage && errorContext === 'id'" class="error-message">{{ errorMessage }}</div>
             </div>
         </div>
         <h2 class="mx-4">Existing Blogs</h2>

@@ -6,6 +6,7 @@ import { RouterTestingModule } from "@angular/router/testing";
 import { HomeComponent } from "./components/home/home.component";
 import { HttpClientModule } from "@angular/common/http";
 import { NO_ERRORS_SCHEMA } from "@angular/core";
+import { LoggerModule, NgxLoggerLevel } from "ngx-logger";
 
 describe('DashboardComponent', () => {
   let component: DashboardComponent;
@@ -14,7 +15,10 @@ describe('DashboardComponent', () => {
   beforeEach(() => {
     TestBed.configureTestingModule({
       declarations: [DashboardComponent, HeaderComponent, HomeComponent],
-      imports: [RouterTestingModule, HttpClientModule],
+      imports: [RouterTestingModule, HttpClientModule, LoggerModule.forRoot({
+        level: NgxLoggerLevel.DEBUG,
+        serverLogLevel: NgxLoggerLevel.ERROR
+      })],
       schemas: [NO_ERRORS_SCHEMA]
     });
     fixture = TestBed.createComponent(DashboardComponent);
