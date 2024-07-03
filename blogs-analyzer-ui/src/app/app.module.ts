@@ -44,7 +44,11 @@ import { LoggerModule, NgxLoggerLevel } from "ngx-logger";
     MatButtonModule,
     HighchartsChartModule,
     MarkdownModule.forRoot(),
-    LoggerModule.forRoot({level: NgxLoggerLevel.DEBUG, serverLogLevel: NgxLoggerLevel.ERROR})
+    LoggerModule.forRoot({
+      level: NgxLoggerLevel.DEBUG,
+      serverLogLevel: NgxLoggerLevel.ERROR,
+      disableConsoleLogging: false
+    })
   ],
   providers: [],
   bootstrap: [AppComponent]
