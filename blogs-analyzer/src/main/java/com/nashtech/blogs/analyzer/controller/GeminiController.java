@@ -3,7 +3,8 @@ package com.nashtech.blogs.analyzer.controller;
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.nashtech.blogs.analyzer.model.OutgoingRequest;
-import lombok.RequiredArgsConstructor;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.HttpEntity;
@@ -15,14 +16,11 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.client.RestTemplate;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 
 import java.io.IOException;
 
 @RestController
 @RequestMapping("/api/gemini/v1")
-@RequiredArgsConstructor
 public class GeminiController {
 
     private static final Logger logger = LoggerFactory.getLogger(GeminiController.class);
@@ -32,7 +30,7 @@ public class GeminiController {
 
     @Autowired
     ObjectMapper objectMapper;
-    
+
     @Value("${spring.ai.vertex.ai.gemini.google-native-api-base-url}")
     private String GOOGLE_API_BASE_URL;
 
@@ -67,7 +65,7 @@ public class GeminiController {
     }
 
     public OutgoingRequest createRequestBody(String text) {
-        logger.debug("Creating request body for text: {}", text);
+        logger.debug("Creating request body for prompt");
         OutgoingRequest requestBody = new OutgoingRequest();
         OutgoingRequest.Content content = new OutgoingRequest.Content();
         OutgoingRequest.Content.Part part = new OutgoingRequest.Content.Part();

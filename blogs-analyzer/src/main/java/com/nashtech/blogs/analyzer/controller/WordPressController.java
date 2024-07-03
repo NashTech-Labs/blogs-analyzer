@@ -58,12 +58,12 @@ public class WordPressController {
 
     @GetMapping("/posts-by-title")
     public ResponseEntity<String> searchPostsByTitle(@RequestParam String title) {
-        logger.info("Searching posts with title: {}", title);
+        logger.info("Searching posts by specific title.");
         String url = WORDPRESS_API_BASE_URL + "posts?search=" + title + "&searchFields=title";
         String response = restTemplate.getForObject(url, String.class);
         JSONArray postsArray = new JSONArray(response);
         if (postsArray.isEmpty()) {
-            logger.error("No posts found with the title: {}", title);
+            logger.error("No posts found with this title");
             throw new PostNotFoundException("No posts found with the title: " + title);
         }
         StringBuilder renderedContent = new StringBuilder();
@@ -73,14 +73,14 @@ public class WordPressController {
             String content = post.getJSONObject("content").getString("rendered");
             renderedContent.append(content).append("\n");
         }
-        logger.info("Successfully fetched posts with title: {}", title);
+        logger.info("Successfully fetched posts by specific title.");
 
         return ResponseEntity.ok(renderedContent.toString());
     }
 
     @GetMapping("/posts-by-author")
     public ResponseEntity<String> getPostsByAuthorId(@RequestParam String authorId) {
-        logger.info("Fetching posts for author ID: {}", authorId);
+        logger.info("Fetching posts by author ID");
         if (authorId == null || authorId.isBlank()) {
             logger.error("Author ID must not be null or empty");
             return ResponseEntity.badRequest().body("Author ID must not be null or empty");
@@ -115,10 +115,10 @@ public class WordPressController {
             page++;
         }
         if (!postFound) {
-            logger.error("No posts found for author ID: {}", authorId);
+            logger.error("No posts found for this author ID.");
             throw new PostNotFoundException("No posts found for author ID: " + authorId);
         }
-        logger.info("Successfully fetched posts for author ID: {}", authorId);
+        logger.info("Successfully fetched posts for author ID.");
         return ResponseEntity.ok(renderedContent.toString());
     }
 

@@ -9,11 +9,9 @@ import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.web.context.annotation.SessionScope;
 
-import java.io.IOException;
-
 @Configuration(proxyBeanMethods = false)
 public class GeminiConfiguration {
-    
+
     @Value("${spring.ai.vertex.ai.gemini.project-id}")
     private String projectId;
 
@@ -22,10 +20,9 @@ public class GeminiConfiguration {
 
     @Value("${spring.ai.vertex.ai.gemini.modelName}")
     private String modelName;
-    
 
     @Bean
-    public VertexAI vertexAI() throws IOException {
+    public VertexAI vertexAI() {
         return new VertexAI(projectId, location);
     }
 
