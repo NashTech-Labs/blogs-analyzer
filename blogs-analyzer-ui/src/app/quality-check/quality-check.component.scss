@@ -50,7 +50,7 @@
 }
 
 .back-btn {
-  font-size: 24px; /* Adjust the font size as needed */
+  font-size: 24px;
   margin: 10px;
   color: #0f0092 !important;
   background-color: transparent;
@@ -68,7 +68,11 @@
 }
 
 .result-box {
-  margin-top: 20px;
+  background: #f3f3f3;
+  box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+  border-radius: 8px;
+  padding: 20px;
+  margin-bottom: 30px;
 }
 
 textarea {
@@ -90,7 +94,7 @@ textarea {
 .chart-item {
   background-color: #fff;
   padding: 10px;
-  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+  box-shadow: 0 0 5px rgba(0, 0, 0, 0.2);
   border-radius: 8px;
   text-align: center;
 }
@@ -101,23 +105,33 @@ textarea {
   color: #555;
 }
 
-.result-box {
-  border: 1px solid #ccc;
-  padding: 10px;
-  margin: 10px;
-  width: 300px;
-  background-color: #f9f9f9;
-}
-
 .result-box h3 {
-  margin: 10px 0;
-  font-size: 18px;
+  margin-top: 10px;
+  font-size: 20px;
 }
 
 .stars {
   display: inline-block;
-  font-size: 20px;
+  font-size: 36px;
   color: #f2b600;
   position: relative;
 }
 
+.rating {
+  padding-left: 50px;
+  font-size: 48px;
+  font-weight: bolder;
+}
+
+.ngb-rating .star {
+  font-size: 2em;
+  color: #f2b600;
+}
+
+.ngb-rating .star.filled {
+  color: #f2b600;
+}
+
+.ngb-rating .star.empty {
+  color: #d3d3d3;
+}

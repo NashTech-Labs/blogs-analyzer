@@ -11,6 +11,8 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import java.io.IOException;
 import java.util.List;
@@ -20,20 +22,29 @@ import java.util.List;
 @RequiredArgsConstructor
 public class VertexAiIntegrationController {
 
+    private static final Logger logger = LoggerFactory.getLogger(VertexAiIntegrationController.class);
+
     private final ChatSession chatSession;
 
     @PostMapping("/review")
     public String fromBodyPost(@RequestBody String prompt) throws IOException {
+        logger.info("Received request to generate content.");
         GenerateContentResponse generateContentResponse = this.chatSession.sendMessage(prompt);
-        return ResponseHandler.getText(generateContentResponse);
+        String responseText = ResponseHandler.getText(generateContentResponse);
+        logger.debug("Generated content response: {}", responseText);
+        return responseText;
     }
 
     @GetMapping("/history/{text}")
     public List<String> getChatSessionHistory(@PathVariable String text) throws IOException {
+        logger.info("Received request to get chat session history.");
         GenerateContentResponse generateContentResponse = this.chatSession.sendMessage(text);
         List<Content> history = this.chatSession.getHistory();
-        return history.stream().flatMap(h -> h.getPartsList().stream()).map(part -> part.getText()).toList();
+        List<String> historyText = history.stream()
+                .flatMap(h -> h.getPartsList().stream())
+                .map(part -> part.getText())
+                .toList();
+        logger.debug("Retrieved chat session history: {}", historyText);
+        return historyText;
     }
-
-
 }

@@ -17,6 +17,13 @@
         {{ errorMessage }}
     </div>
     <div *ngIf="qualityResults.length > 0">
+        <div class="result-box">
+            <h3>Overall Rating:</h3>
+            <span class="rating">{{ overallRating | number:'1.1-1' }}</span><br>
+            <ngb-rating class="stars" [max]="5" [(rate)]="overallRating" [readonly]="true"></ngb-rating>
+            <h3>Overall Feedback:</h3>
+            <p>{{ overallFeedback }}</p>
+        </div>
         <div class="charts-grid">
             <div *ngFor="let result of qualityResults" class="chart-item">
                 <app-report
@@ -26,12 +33,6 @@
                         [chartTitle]="result.originalLabel">
                 </app-report>
                 <div class="comment" [innerHTML]="result.comment | markdown"></div>
-            </div>
-            <div class="result-box">
-                <h3>Overall Rating:</h3>
-                <span class="stars">{{ overallRating }}</span> out of 5<br><br>
-                <h3>Overall Feedback:</h3>
-                <p>{{ overallFeedback }}</p>
             </div>
         </div>
     </div>

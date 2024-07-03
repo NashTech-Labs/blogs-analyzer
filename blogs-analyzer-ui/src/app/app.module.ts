@@ -20,6 +20,7 @@ import { ReportComponent } from './report/report.component';
 import { HighchartsChartModule } from "highcharts-angular";
 import { MarkdownModule } from "ngx-markdown";
 import { LoggerModule, NgxLoggerLevel } from "ngx-logger";
+import { NgbModule } from '@ng-bootstrap/ng-bootstrap';
 
 @NgModule({
   declarations: [
@@ -48,7 +49,8 @@ import { LoggerModule, NgxLoggerLevel } from "ngx-logger";
       level: NgxLoggerLevel.DEBUG,
       serverLogLevel: NgxLoggerLevel.ERROR,
       disableConsoleLogging: false
-    })
+    }),
+    NgbModule
   ],
   providers: [],
   bootstrap: [AppComponent]

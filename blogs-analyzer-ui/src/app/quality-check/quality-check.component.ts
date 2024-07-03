@@ -49,7 +49,7 @@ export class QualityCheckComponent implements OnInit {
     const prompt = `Review blog with the following content: ${this.postData}
     Parameters include fields like:
     ${this.labels.map(label => `- ${label.actual}`).join('\n')}
-    Display result in tabular view for respective percentages and accurate feedback;`;
+    Display result in tabular view for respective percentages with accurate feedback;`;
 
     this.errorMessage = null;
     this.blogService.getBlogQuality(prompt).subscribe({

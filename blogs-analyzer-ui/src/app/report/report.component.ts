@@ -58,6 +58,9 @@ export class ReportComponent implements OnChanges {
       tooltip: {
         pointFormat: '<b>{point.percentage:.1f}%</b>'
       },
+      credits: {
+        enabled: false
+      }
     }
   }
 }

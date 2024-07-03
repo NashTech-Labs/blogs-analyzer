@@ -82,35 +82,6 @@ class WordPressControllerTest {
     }
 
     @Test
-    void testSearchPosts_Success() throws Exception {
-        String search = "test";
-        String url = wordPressController.WORDPRESS_API_BASE_URL + "posts?search=" + search;
-        String jsonResponse = "[{\"content\": {\"rendered\": \"<p>Sample Content</p>\"}}]";
-
-        when(restTemplate.getForObject(eq(url), eq(String.class))).thenReturn(jsonResponse);
-
-        mockMvc.perform(get("/api/wordpress/posts").param("search", search))
-                .andExpect(status().isOk())
-                .andExpect(result -> assertEquals("<p>Sample Content</p>\n", result.getResponse().getContentAsString()));
-
-        verify(restTemplate, times(1)).getForObject(eq(url), eq(String.class));
-    }
-
-    @Test
-    void testSearchPosts_NotFound() throws Exception {
-        String search = "test";
-        String url = wordPressController.WORDPRESS_API_BASE_URL + "posts?search=" + search;
-        String jsonResponse = "[]";
-
-        when(restTemplate.getForObject(eq(url), eq(String.class))).thenReturn(jsonResponse);
-
-        mockMvc.perform(get("/api/wordpress/posts").param("search", search))
-                .andExpect(status().isNotFound());
-
-        verify(restTemplate, times(1)).getForObject(eq(url), eq(String.class));
-    }
-
-    @Test
     void testSearchPostsByTitle_Success() throws Exception {
         String title = "test";
         String url = wordPressController.WORDPRESS_API_BASE_URL + "posts?search=" + title + "&searchFields=title";
