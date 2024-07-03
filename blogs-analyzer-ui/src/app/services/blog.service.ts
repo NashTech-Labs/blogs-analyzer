@@ -18,7 +18,7 @@ export class BlogService {
     const url = `${this.baseUrl}/wordpress/posts-by-title?title=${encodeURIComponent(title)}`;
     this.logger.debug(`BlogService :: Fetching post by Title: ${title} :: URL: ${url}`);
     return this.http.get(url, {responseType: 'text'}).pipe(
-      catchError(this.handleError)
+      catchError(this.handleError.bind(this))
     );
   }
 
@@ -30,7 +30,7 @@ export class BlogService {
         posts: response.posts,
         totalPages: response.totalPages
       })),
-      catchError(this.handleError)
+      catchError(this.handleError.bind(this))
     );
   }
 
@@ -38,7 +38,7 @@ export class BlogService {
     const url = `${this.baseUrl}/wordpress/posts/${id}`;
     this.logger.debug(`BlogService :: Fetching post by Blog ID: ${id} :: URL: ${url}`);
     return this.http.get(url, {responseType: 'text'}).pipe(
-      catchError(this.handleError)
+      catchError(this.handleError.bind(this))
     );
   }
 
@@ -46,7 +46,7 @@ export class BlogService {
     const url = `${this.baseUrl}/wordpress/posts-by-author?authorId=${id}`;
     this.logger.debug(`BlogService :: Fetching post by Author ID: ${id} :: URL: ${url}`);
     return this.http.get(url, {responseType: 'text'}).pipe(
-      catchError(this.handleError)
+      catchError(this.handleError.bind(this))
     );
   }
 
@@ -54,7 +54,7 @@ export class BlogService {
     const url = `${this.baseUrl}/gemini/v1/review`;
     this.logger.debug(`BlogService :: Checking Blog's Quality with prompt ${prompt} :: URL: ${url}`);
     return this.http.post(url, prompt, {responseType: 'text'}).pipe(
-      catchError(this.handleError)
+      catchError(this.handleError.bind(this))
     );
   }
 

@@ -3,7 +3,7 @@
 [![CI/CD Pipeline](https://github.com/NashTech-Labs/Blogs-Analyzer/actions/workflows/maven.yml/badge.svg)](https://github.com/NashTech-Labs/Blogs-Analyzer/actions/workflows/maven.yml)
 
 Blogs-Analyzer Backend is a Spring Boot application designed to search blogs from WordPress APIs based on username, blog
-ID, or text. Additionally, it integrates with Vertex AI to analyze the quality of blog posts using machine learning.
+ID, or text. Additionally, it integrates with Gemini to analyze the quality of blog posts using machine learning.
 Blogs-Analyzer-UI is an Angular application used to display the results on a user interface or dashboard.
 
 ## Table of Contents
@@ -39,7 +39,7 @@ Before starting, ensure you have the following installed and configured:
   | Node.js          | 18.x    |
   | Maven            | 3.9+    |
   | Google Cloud SDK | Latest  |
-  | Vertex AI        | Latest  |
+  | Gemini           | Latest  |
   | WordPress API    | Latest  |
 
 
@@ -54,8 +54,7 @@ Before starting, ensure you have the following installed and configured:
 ## Dependencies
 
 - **Spring Boot**: The core framework for building the backend application.
-- **Vertex AI Client**: Used for integrating with Vertex AI for blog quality analysis. Ensure the necessary
-  configurations and credentials are set up to communicate with Vertex AI APIs.
+- **Gemini Client**: Used for integrating with Gemini for blog quality analysis. Ensure the necessary configurations and credentials are set up to communicate with Gemini APIs.
 - **WordPress API Client**: Allows communication with WordPress APIs to fetch blog data based on username, blog ID, or
   text.
 
@@ -84,7 +83,7 @@ Before starting, ensure you have the following installed and configured:
       name, and author id.
 
 6. #### Analyze Blog Quality
-    - `POST /api/gemini/v1/review` This endpoint analyzes the quality of a blog post using Vertex AI. It requires a JSON
+    - `POST /api/gemini/v1/review` This endpoint analyzes the quality of a blog post using Gemini. It requires a JSON
       payload with blog content.
 
 ## Running the application:
@@ -115,6 +114,6 @@ Once the application is running locally, you can access the API endpoints using 
 Verify API functionality:
 
 Use the endpoints mentioned in the Endpoints section to verify functionality and interaction with WordPress APIs and
-Vertex AI.
+Gemini.
 
  
