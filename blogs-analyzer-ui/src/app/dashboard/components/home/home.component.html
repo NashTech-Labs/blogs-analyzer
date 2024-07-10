@@ -22,6 +22,13 @@
                 <button class="search-btn" (click)="getBlogById()">Search</button>
                 <div *ngIf="errorMessage && errorContext === 'id'" class="error-message">{{ errorMessage }}</div>
             </div>
+            <div class="upload-container">
+                <input type="file" id="fileInput" (change)="onFileSelected($event)" hidden />
+                <label for="fileInput" class="upload-label">
+                    <img src="assets/images/upload_file.svg" alt="upload doc file">
+                </label>
+                <p>Upload .doc/.docx file only</p>
+            </div>
         </div>
         <h2 class="mx-4">Existing Blogs</h2>
 

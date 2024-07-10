@@ -135,3 +135,10 @@ textarea {
 .ngb-rating .star.empty {
   color: #d3d3d3;
 }
+
+.spinner {
+  height: 200px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}

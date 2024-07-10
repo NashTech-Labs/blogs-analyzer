@@ -27,6 +27,7 @@
     "bootstrap": "^5.3.0",
     "highcharts": "^11.4.3",
     "highcharts-angular": "^4.0.0",
+    "ngx-doc-viewer": "^15.0.1",
     "ngx-logger": "^5.0.12",
     "ngx-markdown": "^16.0.0",
     "rxjs": "~7.8.0",

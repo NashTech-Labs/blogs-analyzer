@@ -57,7 +57,7 @@ describe('QualityCheckComponent', () => {
 - Code Examples and Illustrations
 - Links and References
 - Overall Feedback %
-    Display result in tabular view for respective percentages and accurate feedback;`;
+    Display result in tabular view for respective percentages with accurate feedback;`;
 
     spyOn(blogService, 'getBlogQuality').and.returnValue(of(''));
     component.checkQuality();
