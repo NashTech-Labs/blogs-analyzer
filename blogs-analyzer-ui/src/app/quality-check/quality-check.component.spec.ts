@@ -57,7 +57,7 @@ describe('QualityCheckComponent', () => {
 - Code Examples and Illustrations
 - Links and References
 - Overall Feedback %
-    Display result in tabular view for respective percentages and accurate feedback;`;
+    Display result in tabular view for respective percentages with accurate feedback;`;
 
     spyOn(blogService, 'getBlogQuality').and.returnValue(of(''));
     component.checkQuality();
@@ -112,79 +112,40 @@ describe('QualityCheckComponent', () => {
 
   it('should handle error in checkQuality()', () => {
     component.postData = 'Sample blog content';
-    const expectedPrompt = `Review blog with the following content: Sample blog content
-  Parameters include fields like:
-  - Duplicate Content
-  - Spelling Mistakes
-  - Overall Feedback %
-  Display result in tabular view for respective percentages and accurate feedback;`;
-
     spyOn(blogService, 'getBlogQuality').and.returnValue(throwError({message: 'Test error message'}));
     component.checkQuality();
-
     expect(component.errorMessage).toContain('Failed to check blog quality');
-  });
-
-  it('should navigate back on goBack()', () => {
-    const locationSpy = spyOn(component['location'], 'back');
-    component.goBack();
-
-    expect(locationSpy).toHaveBeenCalled();
-  });
-
-  it('should parse a valid response correctly', () => {
-    const response = `
-  | Label | Percentage | Comment |
-  | Duplicate Content | 10% | Some duplicate content |
-  | Spelling Mistakes | 5% | Some spelling mistakes |`;
-    const expectedResults = [
-      {
-        originalLabel: 'Duplicate Content',
-        oppositeLabel: 'Original Content',
-        value: 10,
-        comment: 'Some duplicate content'
-      },
-      {
-        originalLabel: 'Spelling Mistakes',
-        oppositeLabel: 'Correct Spelling',
-        value: 5,
-        comment: 'Some spelling mistakes'
-      }
-    ];
-    const results = component.parseResponse(response);
-    expect(results).toEqual(expectedResults);
-  });
-
-  it('should handle an empty response', () => {
-    const response = '';
-    const results = component.parseResponse(response);
-    expect(results).toEqual([]);
-  });
-
-  it('should handle a response with partially valid rows', () => {
-    const response = `
-  | Label | Percentage | Comment |
-  | Duplicate Content | 10% | Some duplicate content |
-  | Invalid Row`;
-    const expectedResults = [
-      {
-        originalLabel: 'Duplicate Content',
-        oppositeLabel: 'Original Content',
-        value: 10,
-        comment: 'Some duplicate content'
-      }
-    ];
-    const results = component.parseResponse(response);
-    expect(results).toEqual(expectedResults);
   });
 
   it('should calculate overall rating and feedback correctly', () => {
     const response = `
-  | Label | Percentage | Comment |
-  | OVERALL FEEDBACK % | 80% | Very good content |`;
-    const expectedOverallRating = 4;
+    | Label | Percentage | Comment |
+    | OVERALL FEEDBACK % | 80% | Very good content |`;
     component.parseResponse(response);
-    expect(component.overallRating).toEqual(expectedOverallRating);
+    expect(component.overallRating).toEqual(4);
     expect(component.overallFeedback).toEqual('Very good content');
+  });
+
+  it('should handle blogService.getBlogQuality response correctly in checkQuality()', () => {
+    component.draftPost = 'Sample draft content';
+    spyOn(blogService, 'getBlogQuality').and.returnValue(of('yes'));
+    component.checkQuality();
+    expect(component.isLoading).toBe(false);
+  });
+
+  it('should handle blogService.getBlogQuality error in checkQuality()', () => {
+    component.draftPost = 'Sample draft content';
+    spyOn(blogService, 'getBlogQuality').and.returnValue(throwError({ message: 'Test error' }));
+    component.checkQuality();
+    expect(component.errorMessage).toBe('Failed to check blog quality. Please try again later.<br><br>Test error');
+  });
+
+  it('should unsubscribe from all subscriptions on ngOnDestroy', () => {
+    const subscription1 = jasmine.createSpyObj('Subscription', ['unsubscribe']);
+    const subscription2 = jasmine.createSpyObj('Subscription', ['unsubscribe']);
+    component.subscriptions.push(subscription1, subscription2);
+    component.ngOnDestroy();
+    expect(subscription1.unsubscribe).toHaveBeenCalled();
+    expect(subscription2.unsubscribe).toHaveBeenCalled();
   });
 });

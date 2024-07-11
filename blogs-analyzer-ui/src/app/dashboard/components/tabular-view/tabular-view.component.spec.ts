@@ -22,7 +22,7 @@ describe('TabularViewComponent', () => {
         serverLogLevel: NgxLoggerLevel.ERROR
       })],
       providers: [
-        {provide: NGXLogger, useValue: loggerSpy}
+        { provide: NGXLogger, useValue: loggerSpy }
       ],
       schemas: [NO_ERRORS_SCHEMA]
     });
@@ -99,7 +99,81 @@ describe('TabularViewComponent', () => {
 
     expect(component.loading).toBeFalse();
     expect(component.errorMessage).toContain('Failed to fetch Data');
-    expect(component.logger.error).toHaveBeenCalledWith('Error fetching posts for page 1: Failed to fetch posts');
+    expect(logger.error).toHaveBeenCalledWith('Error fetching posts for page 1: Failed to fetch posts');
   });
 
+  it('should initialize column definitions', () => {
+    expect(component.columnDefs.length).toBeGreaterThan(0);
+    expect(component.columnDefs[0].headerName).toBe('Blog ID');
+  });
+
+  it('should emit click event', () => {
+    spyOn(component.clickEvent, 'emit');
+    component.clickEvent.emit(1);
+
+    expect(component.clickEvent.emit).toHaveBeenCalledWith(1);
+  });
+
+  it('should handle quality check button click', () => {
+    const mockResponse = { id: 1, title: 'Test Post' };
+    spyOn(component.blogService, 'getPostById').and.returnValue(of(mockResponse));
+    spyOn(component.router, 'navigate');
+
+    const params = { data: { id: 1 } };
+    component.columnDefs.find(col => col.field === 'id' && col.headerName === 'Quality Check').onCellClicked(params);
+
+    expect(logger.debug).toHaveBeenCalledWith('Initiating quality check for blog ID: 1');
+    expect(component.router.navigate).toHaveBeenCalledWith(['/quality-check'], { state: { data: mockResponse } });
+  });
+
+  it('should handle error during quality check button click', () => {
+    const mockError = new Error('Failed to fetch post by ID');
+    spyOn(component.blogService, 'getPostById').and.returnValue(throwError(mockError));
+
+    const params = { data: { id: 1 } };
+    component.columnDefs.find(col => col.field === 'id' && col.headerName === 'Quality Check').onCellClicked(params);
+
+    expect(logger.error).toHaveBeenCalledWith('Error fetching post by ID 1: Failed to fetch post by ID');
+    expect(component.errorMessage).toContain('Failed to fetch Data');
+  });
+
+  it('should have loading state initially', () => {
+    expect(component.loading).toBeTrue();
+  });
+
+  it('should update loading state after fetchPosts call', () => {
+    const mockData = { posts: [], totalPages: 1, isLastPage: true };
+    spyOn(component.blogService, 'getAllPosts').and.returnValue(of(mockData));
+
+    component.fetchPosts(1);
+
+    expect(component.loading).toBeFalse();
+  });
+
+  it('should set isLastPage correctly', () => {
+    const mockData = { posts: [], totalPages: 1, isLastPage: true };
+    spyOn(component.blogService, 'getAllPosts').and.returnValue(of(mockData));
+
+    component.fetchPosts(1);
+
+    expect(component.isLastPage).toBeTrue();
+  });
+
+  it('should set totalPages correctly', () => {
+    const mockData = { posts: [], totalPages: 3, isLastPage: false };
+    spyOn(component.blogService, 'getAllPosts').and.returnValue(of(mockData));
+
+    component.fetchPosts(1);
+
+    expect(component.totalPages).toBe(3);
+  });
+
+  it('should handle click event for view button', () => {
+    spyOn(window, 'open');
+
+    const params = { data: { url: 'http://example.com' } };
+    component.columnDefs.find(col => col.field === 'url' && col.headerName === 'View').onCellClicked(params);
+
+    expect(window.open).toHaveBeenCalledWith('http://example.com', '_blank');
+  });
 });

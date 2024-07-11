@@ -14,6 +14,7 @@ export class HomeComponent {
   authorId!: number;
   errorMessage: string | null = null;
   errorContext: 'title' | 'author' | 'id' | null = null;
+  fileUrl: any
 
   constructor(
     private blogService: BlogService,
@@ -69,6 +70,28 @@ export class HomeComponent {
           this.logger.error(`Error fetching posts by author ID: ${error.message}`);
         }
       });
+    }
+  }
+
+  onFileSelected(event: Event): void {
+    const input = event.target as HTMLInputElement;
+
+    if (input.files?.[0]) {
+      const file = input.files[0];
+      const fileType = file.name.split('.').pop()?.toLowerCase();
+
+      if (fileType === 'doc' || fileType === 'docx') {
+        this.errorMessage = null;
+        const reader = new FileReader();
+
+        reader.onload = (e) => {
+          this.fileUrl = e.target?.result as string;
+          this.router.navigate(['/quality-check'], { state: { url: this.fileUrl } });
+        };
+        reader.readAsDataURL(file);
+      } else {
+        this.errorMessage = `Invalid file type. <br> Please upload a .doc/.docx file.`;
+      }
     }
   }
 }

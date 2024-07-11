@@ -2,8 +2,8 @@ name: GCP CI/CD Pipeline
 
 on:
   push:
-    branches:
-      - '**'
+    branches: [ "main" ]
+
 
 env:
   PROJECT_ID: ${{ secrets.GKE_PROJECT }}

@@ -9,7 +9,7 @@ import { NGXLogger } from 'ngx-logger';
   styleUrls: ['./tabular-view.component.scss']
 })
 export class TabularViewComponent implements OnInit {
-  protected columnDefs: any[];
+  columnDefs: any[];
   rowData: any[];
   loading: boolean = true;
   currentPage: number = 1;

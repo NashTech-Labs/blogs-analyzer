@@ -21,6 +21,8 @@ import { HighchartsChartModule } from "highcharts-angular";
 import { MarkdownModule } from "ngx-markdown";
 import { LoggerModule, NgxLoggerLevel } from "ngx-logger";
 import { NgbModule } from '@ng-bootstrap/ng-bootstrap';
+import { NgxDocViewerModule } from "ngx-doc-viewer";
+import { MatTooltipModule } from "@angular/material/tooltip";
 
 @NgModule({
   declarations: [
@@ -45,12 +47,14 @@ import { NgbModule } from '@ng-bootstrap/ng-bootstrap';
     MatButtonModule,
     HighchartsChartModule,
     MarkdownModule.forRoot(),
+    NgxDocViewerModule,
     LoggerModule.forRoot({
       level: NgxLoggerLevel.DEBUG,
       serverLogLevel: NgxLoggerLevel.ERROR,
       disableConsoleLogging: false
     }),
-    NgbModule
+    NgbModule,
+    MatTooltipModule
   ],
   providers: [],
   bootstrap: [AppComponent]

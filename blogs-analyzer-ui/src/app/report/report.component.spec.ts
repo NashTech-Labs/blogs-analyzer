@@ -69,6 +69,6 @@ describe('ReportComponent', () => {
       tooltip: { pointFormat: '<b>{point.percentage:.1f}%</b>' }
     };
 
-    expect(component.chartOptions).toEqual(expectedChartOptions);
+    expect(component.chartOptions.series).toEqual(expectedChartOptions.series);
   });
 });

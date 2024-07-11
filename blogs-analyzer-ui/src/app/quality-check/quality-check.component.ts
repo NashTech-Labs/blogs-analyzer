@@ -1,19 +1,26 @@
-import { Component, OnInit } from '@angular/core';
+import { AfterViewInit, Component, ElementRef, OnDestroy, OnInit, ViewChild } from '@angular/core';
 import { Location } from "@angular/common";
 import { BlogService } from "../services/blog.service";
 import { NGXLogger } from 'ngx-logger';
+import { Subscription } from 'rxjs';
 
 @Component({
   selector: 'app-quality-check',
   templateUrl: './quality-check.component.html',
   styleUrls: ['./quality-check.component.scss']
 })
-export class QualityCheckComponent implements OnInit {
-  postData: any;
+export class QualityCheckComponent implements OnInit, AfterViewInit, OnDestroy {
+  @ViewChild('docViewer') docViewer!: ElementRef;
+  fileUrl: string = '';
+  postData: string | undefined;
   qualityResults: { originalLabel: string; oppositeLabel: string; value: number; comment: string }[] = [];
   errorMessage: string | null = null;
   overallFeedback: string | null = null;
   overallRating: number = 0;
+  isLoading: boolean = false;
+  initialLoading: boolean = false;
+  draftPost!: string;
+  subscriptions: Subscription[] = [];
 
   labels = [
     {actual: 'Duplicate Content', opposite: 'Original Content'},
@@ -37,7 +44,17 @@ export class QualityCheckComponent implements OnInit {
 
   ngOnInit(): void {
     this.postData = history?.state?.data;
+    this.fileUrl = history?.state?.url;
     this.logger.debug('Initialized QualityCheckComponent');
+  }
+
+  ngAfterViewInit(): void {
+    setTimeout(() => {
+      if (this.docViewer?.nativeElement) {
+        this.draftPost = this.docViewer.nativeElement.firstElementChild?.firstElementChild?.innerHTML || '';
+        this.logger.debug('Draft Content fetched successfully :: ' + this.draftPost);
+      }
+    }, 500);
   }
 
   goBack(): void {
@@ -46,22 +63,65 @@ export class QualityCheckComponent implements OnInit {
   }
 
   checkQuality() {
-    const prompt = `Review blog with the following content: ${this.postData}
+    if (!this.draftPost && !this.postData) {
+      this.errorMessage = 'No blog content available to check quality.';
+      this.logger.error(`Error checking blog content: ${this.errorMessage}`);
+      return;
+    }
+
+    this.isLoading = true;
+    let prompt = '';
+    if (!this.draftPost) {
+      prompt = `Review blog with the following content: ${this.postData}
     Parameters include fields like:
     ${this.labels.map(label => `- ${label.actual}`).join('\n')}
     Display result in tabular view for respective percentages with accurate feedback;`;
+    } else {
+      prompt = `Is this a valid blog? ${this.draftPost}. Answer Yes/No Only`;
+    }
 
     this.errorMessage = null;
-    this.blogService.getBlogQuality(prompt).subscribe({
+    const subscription = this.blogService.getBlogQuality(prompt).subscribe({
       next: response => {
-        this.qualityResults = this.parseResponse(response);
-        this.logger.debug('Blog quality checked successfully :: ' + this.qualityResults);
+        if (this.draftPost && response.trim().toLowerCase().includes('yes')) {
+          this.reviewBlogContent(this.draftPost);
+        } else if (this.draftPost && response.trim().toLowerCase() === 'no') {
+          this.errorMessage = `This is not a Valid Blog.<br><br>`;
+          this.isLoading = false;
+        } else {
+          this.qualityResults = this.parseResponse(response);
+          this.logger.debug('Blog quality checked successfully :: ' + this.qualityResults);
+          this.isLoading = false;
+        }
       },
       error: error => {
         this.errorMessage = `Failed to check blog quality. Please try again later.<br><br>${error.message}`;
         this.logger.error(`Error checking blog quality: ${error.message}`);
+        this.isLoading = false;
       }
     });
+    this.subscriptions.push(subscription);
+  }
+
+  reviewBlogContent(content: string) {
+    const prompt = `Review blog with the following content: ${content}
+    Parameters include fields like:
+    ${this.labels.map(label => `- ${label.actual}`).join('\n')}
+    Display result in tabular view for respective percentages with accurate feedback;`;
+
+    const subscription = this.blogService.getBlogQuality(prompt).subscribe({
+      next: response => {
+        this.qualityResults = this.parseResponse(response);
+        this.logger.debug('Blog quality checked successfully :: ' + this.qualityResults);
+        this.isLoading = false;
+      },
+      error: error => {
+        this.errorMessage = `Failed to check blog quality. Please try again later.<br><br>${error.message}`;
+        this.logger.error(`Error checking blog quality: ${error.message}`);
+        this.isLoading = false;
+      }
+    });
+    this.subscriptions.push(subscription);
   }
 
   parseResponse(response: string): { originalLabel: string; oppositeLabel: string; value: number; comment: string }[] {
@@ -90,5 +150,9 @@ export class QualityCheckComponent implements OnInit {
       }
     });
     return pairedResults;
+  }
+
+  ngOnDestroy(): void {
+    this.subscriptions.forEach(subscription => subscription.unsubscribe());
   }
 }

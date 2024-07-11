@@ -5,35 +5,62 @@
     Back
 </button>
 
-<div class="container">
+<ng-container *ngIf="initialLoading;">
+    <div class="spinner mt-5" data-testid="mabl-bulk-shrink-loader">
+        <div class="spinner-border text-primary" role="status">
+            <span class="sr-only"></span>
+        </div>
+    </div>
+</ng-container>
+
+<div class="container" *ngIf="!initialLoading">
     <div class="blog-content">
         <h2>HTML Preview</h2>
-        <mat-card class="blog-card">
-            <div [innerHTML]="postData"></div>
+        <mat-card class="blog-card" *ngIf="fileUrl; else noFileContent">
+            <div #docViewer class="doc-viewer-container">
+                <ngx-doc-viewer [url]="fileUrl" viewer="mammoth"></ngx-doc-viewer>
+            </div>
         </mat-card>
+        <ng-template #noFileContent>
+            <mat-card class="blog-card">
+                <div [innerHTML]="postData"></div>
+            </mat-card>
+        </ng-template>
     </div>
-    <button class="search-btn" (click)="checkQuality()">Check Blog's Quality</button>
-    <div *ngIf="errorMessage" class="alert alert-danger mt-3" role="alert">
-        {{ errorMessage }}
-    </div>
-    <div *ngIf="qualityResults.length > 0">
-        <div class="result-box">
-            <h3>Overall Rating:</h3>
-            <span class="rating">{{ overallRating | number:'1.1-1' }}</span><br>
-            <ngb-rating class="stars" [max]="5" [(rate)]="overallRating" [readonly]="true"></ngb-rating>
-            <h3>Overall Feedback:</h3>
-            <p>{{ overallFeedback }}</p>
-        </div>
-        <div class="charts-grid">
-            <div *ngFor="let result of qualityResults" class="chart-item">
-                <app-report
-                        [actualLabel]="[result.originalLabel]"
-                        [oppositeLabel]="[result.oppositeLabel]"
-                        [chartData]="[result.value]"
-                        [chartTitle]="result.originalLabel">
-                </app-report>
-                <div class="comment" [innerHTML]="result.comment | markdown"></div>
+
+    <button class="search-btn" (click)="checkQuality()" [disabled]="isLoading">Check Blog's Quality</button>
+
+    <ng-container *ngIf="isLoading; else dataLoaded">
+        <div class="spinner mt-5" data-testid="mabl-bulk-shrink-loader">
+            <div class="spinner-border text-primary" role="status">
+                <span class="sr-only"></span>
             </div>
         </div>
-    </div>
+    </ng-container>
+
+    <ng-template #dataLoaded>
+        <div *ngIf="errorMessage" class="alert alert-danger mt-3" role="alert">
+            <div [innerHTML]="errorMessage"></div>
+        </div>
+        <div *ngIf="qualityResults.length > 0">
+            <div class="result-box">
+                <h3>Overall Rating:</h3>
+                <span class="rating">{{ overallRating | number:'1.1-1' }}</span><br>
+                <ngb-rating class="stars" [max]="5" [(rate)]="overallRating" [readonly]="true"></ngb-rating>
+                <h3>Overall Feedback:</h3>
+                <p>{{ overallFeedback }}</p>
+            </div>
+            <div class="charts-grid">
+                <div *ngFor="let result of qualityResults" class="chart-item">
+                    <app-report
+                            [actualLabel]="[result.originalLabel]"
+                            [oppositeLabel]="[result.oppositeLabel]"
+                            [chartData]="[result.value]"
+                            [chartTitle]="result.originalLabel">
+                    </app-report>
+                    <div class="comment" [innerHTML]="result.comment | markdown"></div>
+                </div>
+            </div>
+        </div>
+    </ng-template>
 </div>
