@@ -165,4 +165,37 @@ describe('HomeComponent', () => {
     expect(logger.error).toHaveBeenCalledWith(`Error fetching post by ID: ${mockError.message}`);
   });
 
+  it('should handle valid .docx file in onFileSelected', () => {
+    const mockFile = new File([''], 'test.docx', {type: 'application/vnd.openxmlformats-officedocument.wordprocessingml.document'});
+    const event = {target: {files: [mockFile]}} as unknown as Event;
+    const mockFileUrl = 'mock-url';
+
+    spyOn(window, 'FileReader').and.returnValue({
+      readAsDataURL: () => {
+      },
+      onload: (e: any) => {
+        e.target.result = mockFileUrl;
+        component.onFileSelected(event);
+        expect(component.fileUrl).toEqual(mockFileUrl);
+        expect(router.navigate).toHaveBeenCalledWith(['/quality-check'], {state: {url: mockFileUrl}});
+      }
+    } as any);
+
+    component.onFileSelected(event);
+  });
+
+  it('should handle invalid file type in onFileSelected', () => {
+    const mockFile = new File([''], 'test.pdf', {type: 'application/pdf'});
+    const event = {target: {files: [mockFile]}} as unknown as Event;
+    component.onFileSelected(event);
+    expect(component.errorMessage).toEqual('Invalid file type. <br> Please upload a .doc/.docx file.');
+    expect(router.navigate).not.toHaveBeenCalled();
+  });
+
+  it('should not set errorMessage if no file is selected', () => {
+    const event = {target: {files: []}} as unknown as Event;
+    component.onFileSelected(event);
+    expect(component.errorMessage).toBeNull();
+    expect(router.navigate).not.toHaveBeenCalled();
+  });
 });

@@ -50,7 +50,7 @@ export class QualityCheckComponent implements OnInit, AfterViewInit, OnDestroy {
 
   ngAfterViewInit(): void {
     setTimeout(() => {
-      if (this.docViewer && this.docViewer.nativeElement) {
+      if (this.docViewer?.nativeElement) {
         this.draftPost = this.docViewer.nativeElement.firstElementChild?.firstElementChild?.innerHTML || '';
         this.logger.debug('Draft Content fetched successfully :: ' + this.draftPost);
       }

@@ -76,7 +76,7 @@ export class HomeComponent {
   onFileSelected(event: Event): void {
     const input = event.target as HTMLInputElement;
 
-    if (input.files && input.files[0]) {
+    if (input.files?.[0]) {
       const file = input.files[0];
       const fileType = file.name.split('.').pop()?.toLowerCase();
 
