@@ -23,9 +23,9 @@ export class QualityCheckComponent implements OnInit, AfterViewInit, OnDestroy {
   subscriptions: Subscription[] = [];
 
   labels = [
-    {actual: 'Duplicate Content', opposite: 'Original Content'},
-    {actual: 'Spelling Mistakes', opposite: 'Correct Spelling'},
-    {actual: 'Grammatical Errors', opposite: 'Proper Grammar'},
+    {actual: 'Original Content', opposite: 'Duplicate Content'},
+    {actual: 'Correct Spelling', opposite: 'Spelling Mistakes'},
+    {actual: 'No Grammatical Error', opposite: 'Grammatical Errors'},
     {actual: 'Overall SEO Report', opposite: 'SEO Optimization'},
     {actual: 'Accuracy', opposite: 'Inaccuracy'},
     {actual: 'Depth and Completeness', opposite: 'Superficiality'},
@@ -85,7 +85,7 @@ export class QualityCheckComponent implements OnInit, AfterViewInit, OnDestroy {
       next: response => {
         if (this.draftPost && response.trim().toLowerCase().includes('yes')) {
           this.reviewBlogContent(this.draftPost);
-        } else if (this.draftPost && response.trim().toLowerCase() === 'no') {
+        } else if (this.draftPost && response.trim().toLowerCase().includes('no')) {
           this.errorMessage = `This is not a Valid Blog.<br><br>`;
           this.isLoading = false;
         } else {
