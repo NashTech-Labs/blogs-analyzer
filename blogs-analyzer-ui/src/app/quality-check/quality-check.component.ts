@@ -52,7 +52,7 @@ export class QualityCheckComponent implements OnInit, AfterViewInit, OnDestroy {
     setTimeout(() => {
       if (this.docViewer && this.docViewer.nativeElement) {
         this.draftPost = this.docViewer.nativeElement.firstElementChild?.firstElementChild?.innerHTML || '';
-        console.log(this.draftPost)
+        this.logger.debug('Draft Content fetched successfully :: ' + this.draftPost);
       }
     }, 500);
   }
@@ -65,6 +65,7 @@ export class QualityCheckComponent implements OnInit, AfterViewInit, OnDestroy {
   checkQuality() {
     if (!this.draftPost && !this.postData) {
       this.errorMessage = 'No blog content available to check quality.';
+      this.logger.error(`Error checking blog content: ${this.errorMessage}`);
       return;
     }
 
@@ -82,7 +83,7 @@ export class QualityCheckComponent implements OnInit, AfterViewInit, OnDestroy {
     this.errorMessage = null;
     const subscription = this.blogService.getBlogQuality(prompt).subscribe({
       next: response => {
-        if (this.draftPost && response.trim().toLowerCase() === 'yes') {
+        if (this.draftPost && response.trim().toLowerCase().includes('yes')) {
           this.reviewBlogContent(this.draftPost);
         } else if (this.draftPost && response.trim().toLowerCase() === 'no') {
           this.errorMessage = `This is not a Valid Blog.<br><br>`;

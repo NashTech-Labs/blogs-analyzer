@@ -33,7 +33,7 @@ body {
   border-top: 1px dot-dot-dash #d1d1d1;
 }
 
-.ag-header{
+.ag-header {
   border-bottom: 1px dotted #d1d1d1;
 }
 
@@ -52,3 +52,12 @@ body {
   font-size: 15px;
 }
 
+.mdc-tooltip__surface {
+  font-size: 14px !important;
+  font-weight: bold !important;
+  background-color: #0f0092 !important;
+  padding: 10px !important;
+  min-width: 40px !important;
+  min-height: 40px !important;
+  text-align: center !important;
+}

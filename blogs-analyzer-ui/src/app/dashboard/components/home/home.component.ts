@@ -78,13 +78,20 @@ export class HomeComponent {
 
     if (input.files && input.files[0]) {
       const file = input.files[0];
-      const reader = new FileReader();
+      const fileType = file.name.split('.').pop()?.toLowerCase();
 
-      reader.onload = (e) => {
-        this.fileUrl = e.target?.result as string;
-        this.router.navigate(['/quality-check'], {state: {url: this.fileUrl}});
-      };
-      reader.readAsDataURL(file);
+      if (fileType === 'doc' || fileType === 'docx') {
+        this.errorMessage = null;
+        const reader = new FileReader();
+
+        reader.onload = (e) => {
+          this.fileUrl = e.target?.result as string;
+          this.router.navigate(['/quality-check'], { state: { url: this.fileUrl } });
+        };
+        reader.readAsDataURL(file);
+      } else {
+        this.errorMessage = `Invalid file type. <br> Please upload a .doc/.docx file.`;
+      }
     }
   }
 }
