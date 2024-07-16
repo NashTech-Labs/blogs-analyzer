@@ -188,7 +188,7 @@ describe('HomeComponent', () => {
     const mockFile = new File([''], 'test.pdf', {type: 'application/pdf'});
     const event = {target: {files: [mockFile]}} as unknown as Event;
     component.onFileSelected(event);
-    expect(component.errorMessage).toEqual('Invalid file type. <br> Please upload a .doc/.docx file.');
+    expect(component.fileUploadErrorMessage).toEqual('Invalid file type. <br> Please upload a .doc/.docx file.');
     expect(router.navigate).not.toHaveBeenCalled();
   });
 

@@ -62,12 +62,12 @@ export class BlogService {
     let errorMessage = '';
     if (error.error instanceof ErrorEvent) {
       errorMessage = `An error occurred: ${error.error.message}`;
+    } else if (error.status === 500 || !error.status) {
+      errorMessage = 'Something went wrong. (Internal Server Error)';
+    } else if (error.status === 400 && !error.error.message) {
+      errorMessage = 'Something went wrong. (Bad Request)';
     } else {
-      if (error.status === 500 || !error.status) {
-        errorMessage = 'Something went wrong.';
-      } else {
-        errorMessage = `Error: ${error.status} - ${error.error}`;
-      }
+      errorMessage = `Error: ${error.status} - ${error.error.message || error.error}`;
     }
     this.logger.error(`BlogService :: Encountered an error: ${errorMessage}`);
     return throwError(() => new Error(errorMessage));

@@ -8,8 +8,8 @@ on:
 env:
   PROJECT_ID: ${{ secrets.GKE_PROJECT }}
   SERVICE_ACCOUNT_KEY: ${{ secrets.SERVICE_ACCOUNT_KEY }}
-  CLUSTER_NAME: blogs-analyzer-cluster
-  REGION: ${{ secrets.GKE_ZONE }}
+  CLUSTER_NAME: ${{ secrets.CLUSTER_NAME }}
+  REGION: ${{ secrets.GKE_REGION }}
   REGISTRY_NAME: blogs-analyzer
   SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
   GOOGLE_GEMINI_API_KEY: ${{ secrets.GOOGLE_GEMINI_API_KEY }}
@@ -111,8 +111,8 @@ jobs:
 
       - name: Deploy to GKE
         run: |
-          echo "Getting credentials for cluster ${{ env.CLUSTER_NAME }} in zone ${{ env.REGION }}"
-          gcloud container clusters get-credentials blogs-analyzer-cluster --region asia-south1 --project gen-lang-client-0999974873
+          echo "Getting credentials for cluster $CLUSTER_NAME in zone $REGION"
+          gcloud container clusters get-credentials $CLUSTER_NAME --region $REGION --project $PROJECT_ID
           COMMIT_SHA=$(git rev-parse --short HEAD)
           SERVICE_NAMES=$(cat projects-changes-deploy.txt)
           echo "Service Names: $SERVICE_NAMES"

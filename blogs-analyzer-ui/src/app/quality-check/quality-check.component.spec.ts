@@ -43,9 +43,9 @@ describe('QualityCheckComponent', () => {
     component.postData = 'Sample blog content';
     const expectedPrompt = `Review blog with the following content: Sample blog content
     Parameters include fields like:
-    - Duplicate Content
-- Spelling Mistakes
-- Grammatical Errors
+    - Original Content
+- Correct Spelling
+- No Grammatical Error
 - Overall SEO Report
 - Accuracy
 - Depth and Completeness
@@ -67,19 +67,19 @@ describe('QualityCheckComponent', () => {
   it('should parse a valid response correctly', () => {
     const response = `
     | Label | Percentage | Comment |
-    | Duplicate Content | 10% | Some duplicate content |
-    | Spelling Mistakes | 5% | Some spelling mistakes |`;
+    | Original Content | 90% | Some duplicate content |
+    | Correct Spelling | 95% | Some spelling mistakes |`;
     const expectedResults = [
       {
-        originalLabel: 'Duplicate Content',
-        oppositeLabel: 'Original Content',
-        value: 10,
+        oppositeLabel: 'Duplicate Content',
+        originalLabel: 'Original Content',
+        value: 90,
         comment: 'Some duplicate content'
       },
       {
-        originalLabel: 'Spelling Mistakes',
-        oppositeLabel: 'Correct Spelling',
-        value: 5,
+        oppositeLabel: 'Spelling Mistakes',
+        originalLabel: 'Correct Spelling',
+        value: 95,
         comment: 'Some spelling mistakes'
       }
     ];
@@ -96,13 +96,13 @@ describe('QualityCheckComponent', () => {
   it('should handle a response with partially valid rows', () => {
     const response = `
     | Label | Percentage | Comment |
-    | Duplicate Content | 10% | Some duplicate content |
+    | Original Content |95% | Some duplicate content |
     | Invalid Row`;
     const expectedResults = [
       {
-        originalLabel: 'Duplicate Content',
-        oppositeLabel: 'Original Content',
-        value: 10,
+        oppositeLabel: 'Duplicate Content',
+        originalLabel: 'Original Content',
+        value: 95,
         comment: 'Some duplicate content'
       }
     ];

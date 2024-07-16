@@ -113,10 +113,10 @@ describe('BlogService', () => {
       statusText: 'Not Found'
     }));
 
-    expect(loggerSpy.error).toHaveBeenCalledWith(`BlogService :: Encountered an error: Client-side error: Test client-side error message`);
+    expect(loggerSpy.error).toHaveBeenCalledWith('BlogService :: Encountered an error: An error occurred: Test client-side error message');
     result.subscribe({
       error: (error: Error) => {
-        expect(error.message).toBe('Client-side error: Test client-side error message');
+        expect(error.message).toBe('An error occurred: Test client-side error message');
       }
     });
   });
@@ -130,10 +130,10 @@ describe('BlogService', () => {
 
     const result = service.handleError(serverSideError);
 
-    expect(loggerSpy.error).toHaveBeenCalledWith(`BlogService :: Encountered an error: Server-side error: Http failure response for (unknown url): 500 Internal Server Error`);
+    expect(loggerSpy.error).toHaveBeenCalledWith(`BlogService :: Encountered an error: Something went wrong. (Internal Server Error)`);
     result.subscribe({
       error: (error: Error) => {
-        expect(error.message).toBe('Server-side error: Http failure response for (unknown url): 500 Internal Server Error');
+        expect(error.message).toBe('Something went wrong. (Internal Server Error)');
       }
     });
   });
@@ -147,10 +147,10 @@ describe('BlogService', () => {
 
     const result = service.handleError(errorWithoutMessage);
 
-    expect(loggerSpy.error).toHaveBeenCalledWith(`BlogService :: Encountered an error: Server-side error: Http failure response for (unknown url): 400 Bad Request`);
+    expect(loggerSpy.error).toHaveBeenCalledWith(`BlogService :: Encountered an error: Something went wrong. (Bad Request)`);
     result.subscribe({
       error: (error: Error) => {
-        expect(error.message).toBe('Server-side error: Http failure response for (unknown url): 400 Bad Request');
+        expect(error.message).toBe('Something went wrong. (Bad Request)');
       }
     });
   });
