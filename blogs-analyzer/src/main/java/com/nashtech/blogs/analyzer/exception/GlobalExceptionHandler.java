@@ -6,6 +6,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.ControllerAdvice;
 import org.springframework.web.bind.annotation.ExceptionHandler;
+import org.springframework.web.client.HttpClientErrorException;
 import org.springframework.web.context.request.WebRequest;
 
 import java.io.IOException;
@@ -29,5 +30,11 @@ public class GlobalExceptionHandler {
     @ExceptionHandler(PostNotFoundException.class)
     public ResponseEntity<String> handlePostNotFoundException(PostNotFoundException ex) {
         return new ResponseEntity<>(ex.getMessage(), HttpStatus.NOT_FOUND);
+    }
+
+    @ExceptionHandler(HttpClientErrorException.NotFound.class)
+    public ResponseEntity<String> handleNotFound(Exception ex) {
+        logger.error("Post with ID not found");
+        throw new PostNotFoundException(ex.getMessage());
     }
 }

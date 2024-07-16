@@ -17,8 +17,8 @@ provider "google" {
 
 
 #-----------------------GKE Cluster for applications----------------------------
-resource "google_container_cluster" "blogs-analyzer" {
-  name     = "blogs-analyzer"
+resource "google_container_cluster" "blogs-analyzer-cluster" {
+  name     = "blogs-analyzer-cluster"
   location = var.gcp_region_1
   ip_allocation_policy {
     cluster_ipv4_cidr_block  = ""

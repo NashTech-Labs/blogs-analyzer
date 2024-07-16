@@ -61,9 +61,13 @@ export class BlogService {
   handleError(error: HttpErrorResponse): Observable<never> {
     let errorMessage = '';
     if (error.error instanceof ErrorEvent) {
-      errorMessage = `Client-side error: ${error.error.message}`;
+      errorMessage = `An error occurred: ${error.error.message}`;
     } else {
-      errorMessage = `Server-side error: ${error.message}`;
+      if (error.status === 500 || !error.status) {
+        errorMessage = 'Something went wrong. Please try again later.';
+      } else {
+        errorMessage = `Error: ${error.status} - ${error.error}`;
+      }
     }
     this.logger.error(`BlogService :: Encountered an error: ${errorMessage}`);
     return throwError(() => new Error(errorMessage));

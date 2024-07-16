@@ -3,6 +3,7 @@ package com.nashtech.blogs.analyzer.controller;
 import com.nashtech.blogs.analyzer.exception.PostNotFoundException;
 import com.nashtech.blogs.analyzer.model.Post;
 import org.json.JSONArray;
+import org.json.JSONException;
 import org.json.JSONObject;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -17,6 +18,7 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.client.RestClientException;
 import org.springframework.web.client.RestTemplate;
 
 import java.util.ArrayList;
@@ -41,19 +43,25 @@ public class WordPressController {
 
     @GetMapping("/posts/{id}")
     public ResponseEntity<String> getPostById(@PathVariable Long id) {
-        logger.info("Fetching post with ID: {}", id);
-        String url = WORDPRESS_API_BASE_URL + "posts/" + id;
-        String response = restTemplate.getForObject(url, String.class);
-        if (response == null || response.isEmpty()) {
-            logger.error("Post with ID {} not found", id);
+        try {
+            logger.info("Fetching post with ID: {}", id);
+            String url = WORDPRESS_API_BASE_URL + "posts/" + id;
+            String response = restTemplate.getForObject(url, String.class);
+            System.out.println(response);
+            if (response == null || response.isEmpty()) {
+                logger.error("Post with ID {} not found", id);
+                throw new PostNotFoundException("Post with ID " + id + " not found");
+            }
+
+            JSONObject jsonResponse = new JSONObject(response);
+            String content = jsonResponse.getJSONObject("content").getString("rendered");
+            logger.info("Successfully fetched post with ID: {}", id);
+
+            return ResponseEntity.ok(content);
+        } catch (RestClientException | JSONException e) {
+            logger.error("Error fetching post with ID {}: {}", id, e.getMessage());
             throw new PostNotFoundException("Post with ID " + id + " not found");
         }
-
-        JSONObject jsonResponse = new JSONObject(response);
-        String content = jsonResponse.getJSONObject("content").getString("rendered");
-        logger.info("Successfully fetched post with ID: {}", id);
-
-        return ResponseEntity.ok(content);
     }
 
     @GetMapping("/posts-by-title")
