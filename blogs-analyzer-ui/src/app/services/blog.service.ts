@@ -64,7 +64,7 @@ export class BlogService {
       errorMessage = `An error occurred: ${error.error.message}`;
     } else {
       if (error.status === 500 || !error.status) {
-        errorMessage = 'Something went wrong. Please try again later.';
+        errorMessage = 'Something went wrong.';
       } else {
         errorMessage = `Error: ${error.status} - ${error.error}`;
       }

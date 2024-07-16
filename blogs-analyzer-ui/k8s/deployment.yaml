@@ -14,7 +14,7 @@ spec:
     spec:
       containers:
         - name: blogs-analyzer-ui
-          image: blogs-analyzer/gen-lang-client-0999974873/blogs-analyzer-ui:latest
+          image: blogs-analyzer-repo/gen-lang-client-0999974873/blogs-analyzer-ui:latest
           ports:
             - containerPort: 80
           resources:

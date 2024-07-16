@@ -13,6 +13,7 @@ export class HomeComponent {
   blogId!: number;
   authorId!: number;
   errorMessage: string | null = null;
+  fileUploadErrorMessage: string | null = null;
   errorContext: 'title' | 'author' | 'id' | null = null;
   fileUrl: any
 
@@ -81,7 +82,7 @@ export class HomeComponent {
       const fileType = file.name.split('.').pop()?.toLowerCase();
 
       if (fileType === 'doc' || fileType === 'docx') {
-        this.errorMessage = null;
+        this.fileUploadErrorMessage = null;
         const reader = new FileReader();
 
         reader.onload = (e) => {
@@ -90,7 +91,7 @@ export class HomeComponent {
         };
         reader.readAsDataURL(file);
       } else {
-        this.errorMessage = `Invalid file type. <br> Please upload a .doc/.docx file.`;
+        this.fileUploadErrorMessage = `Invalid file type. <br> Please upload a .doc/.docx file.`;
       }
     }
   }
