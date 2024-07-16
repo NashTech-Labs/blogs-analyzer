@@ -16,7 +16,7 @@ spec:
     spec:
       containers:
         - name: blogs-analyzer
-          image: blogs-analyzer-repo/gen-lang-client-0999974873/blogs-analyzer:latest
+          image: gcr.io/gen-lang-client-0999974873/blogs-analyzer:latest
           env:
             - name: GOOGLE_GEMINI_API_KEY
               valueFrom:
