@@ -18,7 +18,6 @@ import { QualityCheckComponent } from './quality-check/quality-check.component';
 import { MatButtonModule } from "@angular/material/button";
 import { ReportComponent } from './report/report.component';
 import { HighchartsChartModule } from "highcharts-angular";
-import { MarkdownModule } from "ngx-markdown";
 import { LoggerModule, NgxLoggerLevel } from "ngx-logger";
 import { NgbModule } from '@ng-bootstrap/ng-bootstrap';
 import { NgxDocViewerModule } from "ngx-doc-viewer";
@@ -46,7 +45,6 @@ import { MatTooltipModule } from "@angular/material/tooltip";
     MatIconModule,
     MatButtonModule,
     HighchartsChartModule,
-    MarkdownModule.forRoot(),
     NgxDocViewerModule,
     LoggerModule.forRoot({
       level: NgxLoggerLevel.DEBUG,
