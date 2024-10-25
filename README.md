@@ -102,9 +102,15 @@ Before starting, ensure you have the following installed and configured:
        mvn spring-boot:run 
        ``` 
 2. Starting Angular Application (For Dashboard)
-   ```bash
-   ng serve
-   ```
+   - Build the project:
+     ```bash
+        mvn clean install
+     ``` 
+   - Running Application:
+
+     ```bash
+       ng serve
+     ```
 
 Now, Application is running at the default port 4200. Dashboard URL: ```localhost:4200```
 
